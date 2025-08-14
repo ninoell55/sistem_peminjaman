@@ -18,7 +18,6 @@ if ($connection->connect_error) {
 }
 
 
-
 // <<< SIDEBAR-isActive
 function isActive($target)
 {
@@ -48,6 +47,7 @@ function login_admin($connection, $username, $password)
         $row = mysqli_fetch_assoc($result);
 
         if ($row['password'] === $password) {
+            $_SESSION['id_admin'] = $row['id_admin'];
             $_SESSION['nama_admin'] = $row['nama_admin'];
             $_SESSION['username'] = $row['username'];
             $_SESSION['role'] = $row['role'];
@@ -76,6 +76,7 @@ function login_pengguna($connection, $username, $password)
         $row = mysqli_fetch_assoc($result);
 
         if ($row['password'] === $password) {
+            $_SESSION['id_pengguna'] = $row['id_pengguna'];
             $_SESSION['nama_pengguna'] = $row['nama_pengguna'];
             $_SESSION['username'] = $row['username'];
             $_SESSION['role'] = $row['role'];

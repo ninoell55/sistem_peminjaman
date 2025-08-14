@@ -10,14 +10,14 @@ if (!isset($_SESSION['login_admin'])) {
 // Ambil data kategori
 $kategori = query("SELECT * FROM kategori ORDER BY nama_kategori ASC");
 
-include '../../../includes/header.php';
-include '../../../includes/sidebar.php';
+require_once '../../../includes/header.php';
+require_once '../../../includes/sidebar.php';
 ?>
 
 <div class="md:ml-64 min-h-screen bg-gray-900 text-white p-6 pt-24">
     <main class="p-6">
         <div class="mb-6">
-            <h1 class="text-3xl font-bold mb-1">Tambah Komoditas</h1>
+            <h1 class="text-3xl font-bold mb-1"><?= $pageTitle; ?></h1>
             <p class="text-gray-400">Isi formulir di bawah untuk menambahkan data barang baru.</p>
         </div>
 
@@ -105,4 +105,4 @@ include '../../../includes/sidebar.php';
     }
 </script>
 
-<?php include '../../../includes/footer.php'; ?>
+<?php require_once '../../../includes/footer.php'; ?>

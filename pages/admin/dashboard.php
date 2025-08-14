@@ -1,6 +1,6 @@
 <?php
 require_once '../../config/functions.php';
-$pageTitle = 'Dashboard';
+$pageTitle = 'Dashboard Admin';
 
 // Cek apakah pengguna sudah login (admin atau pengguna)
 if (!isset($_SESSION['login_admin'])) {
@@ -22,20 +22,24 @@ $adminUsername = $_SESSION['username'] ?? '-';
 $dataAdmin = mysqli_fetch_assoc(mysqli_query($connection, "SELECT * FROM admin WHERE username='$adminUsername'"));
 
 // Ambil pengguna terbaru yang meminjam
+// Menggunakan query untuk mendapatkan pengguna terbaru yang meminjam di hari ini
 $latestPeminjamQuery = "SELECT 
                             p.*, pg.nama_pengguna, pg.username 
                         FROM peminjaman p 
-                        JOIN pengguna pg ON p.id_pengguna = pg.id_pengguna 
-                            ORDER BY p.created_at DESC 
+                        JOIN pengguna pg ON p.id_pengguna = pg.id_pengguna
+                            WHERE p.tanggal_pinjam = CURDATE() 
+                            AND p.status = 'dipinjam' 
+                                ORDER BY p.created_at DESC 
                         LIMIT 1";
-                        
+
 $latestPeminjam = mysqli_fetch_assoc(mysqli_query($connection, $latestPeminjamQuery));
 
 $selectedYear = isset($_GET['tahun']) ? (int)$_GET['tahun'] : date('Y');
 
-$query = "SELECT MONTH(tanggal_pinjam) AS bulan, COUNT(*) AS total 
+$query = "SELECT 
+            MONTH(tanggal_pinjam) AS bulan, COUNT(*) AS total 
           FROM peminjaman 
-          WHERE YEAR(tanggal_pinjam) = $selectedYear 
+            WHERE YEAR(tanggal_pinjam) = $selectedYear 
           GROUP BY bulan 
           ORDER BY bulan";
 
@@ -47,18 +51,18 @@ while ($row = mysqli_fetch_assoc($result)) {
     $chartData[(int)$row['bulan']] = (int)$row['total'];
 }
 
-include '../../includes/header.php';
-include '../../includes/sidebar.php';
+require_once '../../includes/header.php';
+require_once '../../includes/sidebar.php';
 ?>
 
-<div class="md:ml-64 min-h-screen bg-gray-900 text-white p-6 pt-24">
+<div class="md:ml-64 min-h-screen bg-gray-900 text-white p-6 pt-16 md:pt-24">
 
-    <main class="flex-1 p-6">
-        <h1 class="text-3xl font-bold mb-2">Beranda.</h1>
+    <main class="flex-1 md:p-6">
+        <h1 class="text-3xl font-bold mb-2">Beranda,</h1>
         <p class="text-gray-400 mb-6">Halaman Beranda.</p>
 
         <!-- Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
 
             <!-- Total Admin -->
             <div class="bg-gray-800 rounded-2xl p-5 shadow flex flex-col justify-between">
@@ -72,7 +76,7 @@ include '../../includes/sidebar.php';
                     </div>
                 </div>
                 <div class="flex justify-end mt-4">
-                    <a href="#" title="Lihat detail" class="text-gray-400 hover:text-white transition">
+                    <a href="<?= $base_url; ?>pages/admin/set_admin/read.php" title="Lihat detail" class="text-gray-400 hover:text-white transition">
                         <i data-lucide="arrow-right" class="w-5 h-5"></i>
                     </a>
                 </div>
@@ -90,7 +94,7 @@ include '../../includes/sidebar.php';
                     </div>
                 </div>
                 <div class="flex justify-end mt-4">
-                    <a href="#" title="Lihat detail" class="text-gray-400 hover:text-white transition">
+                    <a href="<?= $base_url; ?>pages/admin/set_pengguna/read.php" title="Lihat detail" class="text-gray-400 hover:text-white transition">
                         <i data-lucide="arrow-right" class="w-5 h-5"></i>
                     </a>
                 </div>
@@ -108,21 +112,7 @@ include '../../includes/sidebar.php';
                     </div>
                 </div>
                 <div class="flex justify-end mt-4">
-                    <a href="#" title="Lihat detail" class="text-gray-400 hover:text-white transition">
-                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Admin Aktif -->
-            <div class="bg-gray-800 rounded-2xl p-5 shadow flex flex-col justify-between text-white">
-                <div>
-                    <p class="text-sm text-gray-400 mb-1">Administrator Aktif</p>
-                    <p class="text-lg font-semibold"><?= $dataAdmin['username'] ?? '-' ?></p>
-                    <p class="text-sm text-gray-500"><?= $dataAdmin['nama_admin'] ?? '-' ?></p>
-                </div>
-                <div class="flex justify-end mt-4">
-                    <a href="#" title="Lihat detail" class="text-gray-400 hover:text-white transition">
+                    <a href="<?= $base_url; ?>pages/admin/komoditas/read.php" title="Lihat detail" class="text-gray-400 hover:text-white transition">
                         <i data-lucide="arrow-right" class="w-5 h-5"></i>
                     </a>
                 </div>
@@ -138,15 +128,12 @@ include '../../includes/sidebar.php';
                     <a href="#" title="Lihat detail" class="text-gray-400 hover:text-white transition">
                         <p class="text-sm text-gray-500"><?= $latestPeminjam['username'] ?? '-' ?></p>
                     </a>
-                    <a href="#" class="text-sm px-4 py-1 border border-gray-400 text-gray-300 rounded-full hover:bg-white hover:text-gray-900 transition">
+                    <a href="<?= $base_url; ?>pages/admin/peminjaman/peminjaman.php" class="text-sm px-4 py-1 border border-gray-400 text-gray-300 rounded-full hover:bg-white hover:text-gray-900 transition">
                         Lihat Daftar
                     </a>
                 </div>
             </div>
-
         </div>
-
-
 
         <!-- Grafik -->
         <div class="bg-gray-800 p-6 rounded-2xl shadow-md mt-6">
@@ -161,7 +148,7 @@ include '../../includes/sidebar.php';
         </div>
 
     </main>
-</div>  
+</div>
 
 <script>
     const ctx = document.getElementById('peminjamanChart').getContext('2d');
@@ -207,5 +194,4 @@ include '../../includes/sidebar.php';
     });
 </script>
 
-
-<?php include '../../includes/footer.php'; ?>
+<?php require_once '../../includes/footer.php'; ?>

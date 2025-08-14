@@ -11,7 +11,7 @@ if (isset($_SESSION['login_pengguna'])) {
 ?>
 
 <?php include '../../includes/header.php'; ?>
-<div class="min-h-screen bg-gray-900 flex items-center justify-center px-4">
+<div class="min-h-screen bg-gradient-to-br from-indigo-900 via-gray-900 to-gray-800 flex items-center justify-center px-4">
     <div class="bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-8">
         <h2 class="text-2xl underline font-extrabold tracking-tighter text-white mb-6 text-center">Login Pengguna</h2>
 

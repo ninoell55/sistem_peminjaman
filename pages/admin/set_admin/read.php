@@ -17,15 +17,14 @@ foreach ($result as $r) {
     $roles[] = $r['role'];
 }
 
-include '../../../includes/header.php';
-include '../../../includes/sidebar.php';
+require_once '../../../includes/header.php';
+require_once '../../../includes/sidebar.php';
 ?>
-
 <div class="md:ml-64 min-h-screen bg-gray-900 text-white p-6 pt-24">
     <main class="p-6">
         <div class="flex justify-between items-center mb-6">
             <div>
-                <h1 class="text-3xl font-bold">Data Admin</h1>
+                <h1 class="text-3xl font-bold"><?= $pageTitle; ?></h1>
                 <p class="text-gray-400">Berikut adalah daftar seluruh admin yang tersedia.</p>
             </div>
 
@@ -36,7 +35,7 @@ include '../../../includes/sidebar.php';
         </div>
 
         <div class="overflow-x-auto rounded-2xl shadow">
-            <table class="min-w-full bg-gray-800 text-sm text-white table-auto border-collapse">
+            <table id="dataTable" class="min-w-full bg-gray-800 text-sm text-white table-auto border-collapse">
                 <thead>
                     <tr class="bg-gray-700 text-left">
                         <th class="px-4 py-3">#</th>
@@ -150,4 +149,4 @@ include '../../../includes/sidebar.php';
     </div>
 </div>
 
-<?php include '../../../includes/footer.php'; ?>
+<?php require_once '../../../includes/footer.php'; ?>

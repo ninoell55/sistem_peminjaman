@@ -14,23 +14,23 @@ $komoditas = query("SELECT barang.*,
                     JOIN kategori ON barang.id_kategori = kategori.id_kategori 
                         ORDER BY barang.created_at DESC");
 
-include '../../../includes/header.php';
-include '../../../includes/sidebar.php';
+require_once '../../../includes/header.php';
+require_once '../../../includes/sidebar.php';
 ?>
 
-<div class="md:ml-64 min-h-screen bg-gray-900 text-white p-6 pt-24">
-    <main class="p-6">
-        <div class="flex justify-between items-center mb-6">
+<div class="md:ml-64 min-h-screen bg-gray-900 text-white p-6 pt-16 md:pt-24">
+    <main class="pt-5 md:p-6">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-3.5">
             <div>
-                <h1 class="text-3xl font-bold">Data Komoditas</h1>
-                <p class="text-gray-400">Berikut adalah daftar seluruh barang yang tersedia.</p>
+                <h1 class="text-2xl md:text-3xl font-bold"><?= $pageTitle; ?></h1>
+                <p class="text-gray-400 text-sm">Berikut adalah daftar seluruh barang yang tersedia.</p>
             </div>
             <div class="flex gap-4">
-                <button onclick="document.getElementById('modalKategori').classList.remove('hidden')" type="button" class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-full text-sm font-semibold text-white shadow">
+                <button onclick="document.getElementById('modalKategori').classList.remove('hidden')" type="button" class="inline-flex items-center md:px-4 md:py-2 p-2 bg-gray-600 hover:bg-gray-700 rounded-full text-sm font-semibold text-white shadow">
                     <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Tambah Kategori
                 </button>
                 ||
-                <a href="create.php" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-full text-sm font-semibold text-white shadow">
+                <a href="create.php" class="inline-flex items-center md:px-4 md:py-2 p-2 bg-indigo-600 hover:bg-indigo-700 rounded-full text-sm font-semibold text-white shadow">
                     <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Tambah Barang
                 </a>
             </div>
@@ -118,4 +118,4 @@ include '../../../includes/sidebar.php';
     </script>
 </div>
 
-<?php include '../../../includes/footer.php'; ?>
+<?php require_once '../../../includes/footer.php'; ?>

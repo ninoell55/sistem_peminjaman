@@ -36,14 +36,14 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-
 // ADMIN ------->>
 // Modal edit admin: klik di luar area modal untuk close
-document
-  .getElementById("modalEditAdminBg")
-  .addEventListener("click", function () {
+var modalEditAdminBg = document.getElementById("modalEditAdminBg");
+if (modalEditAdminBg) {
+  modalEditAdminBg.addEventListener("click", function () {
     document.getElementById("modalEditAdmin").classList.add("hidden");
   });
+}
 // Fungsi untuk buka modal edit dan isi data
 function openEditAdminModal(data) {
   document.getElementById("modalEditAdmin").classList.remove("hidden");
@@ -53,12 +53,22 @@ function openEditAdminModal(data) {
   document.getElementById("edit_password").value = "";
   document.getElementById("edit_role").value = data.role;
 }
-document.getElementById("modalAdminBg").addEventListener("click", function () {
-  document.getElementById("modalAdmin").classList.add("hidden");
-});
+var modalAdminBg = document.getElementById("modalAdminBg");
+if (modalAdminBg) {
+  modalAdminBg.addEventListener("click", function () {
+    document.getElementById("modalAdmin").classList.add("hidden");
+  });
+}
 // end-ADMIN <<-------
 
 // PENGGUNA ------->>
+// Modal tambah pengguna: klik di luar area modal untuk close
+var modalEditPenggunaBg = document.getElementById("modalEditPenggunaBg");
+if (modalEditPenggunaBg) {
+  modalEditPenggunaBg.addEventListener("click", function () {
+    document.getElementById("modalEditPengguna").classList.add("hidden");
+  });
+}
 // Tampilkan field kelas, jurusan, nip_nis hanya jika role siswa (tambah)
 function toggleSiswaFields() {
   var role = document.getElementById("role_tambah").value.toLowerCase();
@@ -83,12 +93,6 @@ function toggleEditSiswaFields() {
     document.getElementById("edit_jurusan").value = "";
   }
 }
-// Modal edit pengguna: klik di luar area modal untuk close
-document
-  .getElementById("modalEditPenggunaBg")
-  .addEventListener("click", function () {
-    document.getElementById("modalEditPengguna").classList.add("hidden");
-  });
 // Fungsi untuk buka modal edit dan isi data
 function openEditPenggunaModal(data) {
   document.getElementById("modalEditPengguna").classList.remove("hidden");
@@ -102,9 +106,39 @@ function openEditPenggunaModal(data) {
   document.getElementById("edit_nip_nis").value = data.nip_nis;
   toggleEditSiswaFields();
 }
-document
-  .getElementById("modalPenggunaBg")
-  .addEventListener("click", function () {
+// Modal edit pengguna: klik di luar area modal untuk close
+var modalPenggunaBg = document.getElementById("modalPenggunaBg");
+if (modalPenggunaBg) {
+  modalPenggunaBg.addEventListener("click", function () {
     document.getElementById("modalPengguna").classList.add("hidden");
   });
+}
 // end-PENGGUNA <<-------
+
+// datatable initialization
+$(document).ready(function () {
+  $("#dataTable").DataTable({
+    responsive: true,
+    languange: {
+      search: "Cari:",
+      lengthMenu: "Tampilkan _MENU_ entri",
+      info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ entri",
+      infoEmpty: "Tidak ada entri yang ditemukan",
+      infoFiltered: "(difilter dari _MAX_ total entri)",
+      paginate: {
+        first: "Pertama",
+        last: "Terakhir",
+        next: "Selanjutnya",
+        previous: "Sebelumnya"
+      }
+    },
+    pageLength: 10,
+    lengthMenu: [10, 25, 50, 100],
+    order: [[0, "asc"]],
+    columnDefs: [
+      { orderable: false, targets: -1 }, // Nonaktifkan sorting pada kolom terakhir (aksi)
+      { className: "text-center", targets: "_all" } // Tambahkan kelas text-center ke semua kolom
+    ],
+    });
+});
+// end-datatable <<-------
