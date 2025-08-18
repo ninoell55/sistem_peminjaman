@@ -3,7 +3,7 @@
 session_start();
 
 // base url for the application
-$base_url = 'http://localhost/sistem_peminjaman/';
+$base_url = 'http://192.168.18.8/sistem_peminjaman/';
 
 // Database connection settings
 $hostname = 'localhost';
