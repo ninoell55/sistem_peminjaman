@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // ADMIN ------->>
 // Modal edit admin: klik di luar area modal untuk close
-var modalEditAdminBg = document.getElementById("modalEditAdminBg");
+let modalEditAdminBg = document.getElementById("modalEditAdminBg");
 if (modalEditAdminBg) {
   modalEditAdminBg.addEventListener("click", function () {
     document.getElementById("modalEditAdmin").classList.add("hidden");
@@ -53,7 +53,7 @@ function openEditAdminModal(data) {
   document.getElementById("edit_password").value = "";
   document.getElementById("edit_role").value = data.role;
 }
-var modalAdminBg = document.getElementById("modalAdminBg");
+let modalAdminBg = document.getElementById("modalAdminBg");
 if (modalAdminBg) {
   modalAdminBg.addEventListener("click", function () {
     document.getElementById("modalAdmin").classList.add("hidden");
@@ -63,7 +63,7 @@ if (modalAdminBg) {
 
 // PENGGUNA ------->>
 // Modal tambah pengguna: klik di luar area modal untuk close
-var modalEditPenggunaBg = document.getElementById("modalEditPenggunaBg");
+let modalEditPenggunaBg = document.getElementById("modalEditPenggunaBg");
 if (modalEditPenggunaBg) {
   modalEditPenggunaBg.addEventListener("click", function () {
     document.getElementById("modalEditPengguna").classList.add("hidden");
@@ -71,8 +71,8 @@ if (modalEditPenggunaBg) {
 }
 // Tampilkan field kelas, jurusan, nip_nis hanya jika role siswa (tambah)
 function toggleSiswaFields() {
-  var role = document.getElementById("role_tambah").value.toLowerCase();
-  var siswaFields = document.getElementById("siswaFields");
+  let role = document.getElementById("role_tambah").value.toLowerCase();
+  let siswaFields = document.getElementById("siswaFields");
   if (role === "siswa") {
     siswaFields.style.display = "block";
   } else {
@@ -83,8 +83,8 @@ function toggleSiswaFields() {
 }
 // Tampilkan field kelas, jurusan, nip_nis hanya jika role siswa (edit)
 function toggleEditSiswaFields() {
-  var role = document.getElementById("edit_role").value.toLowerCase();
-  var siswaFields = document.getElementById("editSiswaFields");
+  let role = document.getElementById("edit_role").value.toLowerCase();
+  let siswaFields = document.getElementById("editSiswaFields");
   if (role === "siswa") {
     siswaFields.style.display = "block";
   } else {
@@ -107,7 +107,7 @@ function openEditPenggunaModal(data) {
   toggleEditSiswaFields();
 }
 // Modal edit pengguna: klik di luar area modal untuk close
-var modalPenggunaBg = document.getElementById("modalPenggunaBg");
+let modalPenggunaBg = document.getElementById("modalPenggunaBg");
 if (modalPenggunaBg) {
   modalPenggunaBg.addEventListener("click", function () {
     document.getElementById("modalPengguna").classList.add("hidden");
@@ -115,30 +115,29 @@ if (modalPenggunaBg) {
 }
 // end-PENGGUNA <<-------
 
-// datatable initialization
-$(document).ready(function () {
-  $("#dataTable").DataTable({
-    responsive: true,
-    languange: {
-      search: "Cari:",
-      lengthMenu: "Tampilkan _MENU_ entri",
-      info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ entri",
-      infoEmpty: "Tidak ada entri yang ditemukan",
-      infoFiltered: "(difilter dari _MAX_ total entri)",
-      paginate: {
-        first: "Pertama",
-        last: "Terakhir",
-        next: "Selanjutnya",
-        previous: "Sebelumnya"
-      }
-    },
-    pageLength: 10,
-    lengthMenu: [10, 25, 50, 100],
-    order: [[0, "asc"]],
-    columnDefs: [
-      { orderable: false, targets: -1 }, // Nonaktifkan sorting pada kolom terakhir (aksi)
-      { className: "text-center", targets: "_all" } // Tambahkan kelas text-center ke semua kolom
-    ],
-    });
-});
-// end-datatable <<-------
+// BARANG ------->>
+function loadBarang() {
+  let search = document.getElementById("search").value;
+  let kategori = document.getElementById("kategori").value;
+
+  let xhr = new XMLHttpRequest();
+  xhr.open(
+    "GET",
+    "fetch_barang.php?search=" + search + "&kategori=" + kategori,
+    true
+  );
+  xhr.onload = function () {
+    if (this.status == 200) {
+      document.getElementById("dataBarang").innerHTML = this.responseText;
+    }
+  };
+  xhr.send();
+}
+
+// load pertama kali
+window.onload = loadBarang;
+
+// jalankan saat ketik / ubah filter
+document.getElementById("search").addEventListener("keyup", loadBarang);
+document.getElementById("kategori").addEventListener("change", loadBarang);
+// end-BARANG <<-------

@@ -82,7 +82,7 @@
                 <p class="text-sm font-semibold uppercase text-gray-500 dark:text-gray-400 mb-3">Daftar Menu</p>
                 <div class="space-y-3">
                     <!-- Barang -->
-                    <a href="<?= $base_url ?>pages/pengguna/peminjaman/daftar_barang.php" class="flex items-center px-4 py-2 rounded-md <?= isActive('daftar_barang.php') ? 'bg-indigo-600 text-white hover:bg-indigo-800 transition ease-in-out' : 'dark:hover:bg-gray-800' ?>">
+                    <a href="<?= $base_url ?>pages/pengguna/barang/daftar_barang.php" class="flex items-center px-4 py-2 rounded-md <?= isActive('daftar_barang.php') ? 'bg-indigo-600 text-white hover:bg-indigo-800 transition ease-in-out' : 'dark:hover:bg-gray-800' ?>">
                         <i data-lucide="package" class="w-5 h-5 mr-2"></i>
                         Daftar Barang
                     </a>

@@ -27,7 +27,7 @@ $latestPeminjamQuery = "SELECT
                             p.*, pg.nama_pengguna, pg.username 
                         FROM peminjaman p 
                         JOIN pengguna pg ON p.id_pengguna = pg.id_pengguna
-                            WHERE p.tanggal_pinjam = CURDATE() 
+                            WHERE p.waktu_pinjam = CURDATE() 
                             AND p.status = 'dipinjam' 
                                 ORDER BY p.created_at DESC 
                         LIMIT 1";
@@ -37,9 +37,9 @@ $latestPeminjam = mysqli_fetch_assoc(mysqli_query($connection, $latestPeminjamQu
 $selectedYear = isset($_GET['tahun']) ? (int)$_GET['tahun'] : date('Y');
 
 $query = "SELECT 
-            MONTH(tanggal_pinjam) AS bulan, COUNT(*) AS total 
+            MONTH(waktu_pinjam) AS bulan, COUNT(*) AS total 
           FROM peminjaman 
-            WHERE YEAR(tanggal_pinjam) = $selectedYear 
+            WHERE YEAR(waktu_pinjam) = $selectedYear 
           GROUP BY bulan 
           ORDER BY bulan";
 

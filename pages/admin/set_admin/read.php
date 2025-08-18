@@ -3,13 +3,12 @@ require_once '../../../config/functions.php';
 $pageTitle = 'Data Administrator';
 
 if (!isset($_SESSION['login_admin'])) {
-    header("Location: ../../../auth/login_admin/login.php"); // redirect ke halaman awal login
+    header("Location: ../../../auth/login_admin/login.php");
     exit;
 }
 
 // Ambil data admin
-$admin = query("SELECT * FROM admin 
-                ORDER BY created_at DESC");
+$admin = query("SELECT * FROM admin ORDER BY created_at DESC");
 
 $roles = array();
 $result = query("SELECT DISTINCT role FROM admin ORDER BY role ASC");

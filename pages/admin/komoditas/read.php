@@ -41,7 +41,7 @@ require_once '../../../includes/sidebar.php';
                 <thead>
                     <tr class="bg-gray-700 text-left">
                         <th class="px-4 py-3">#</th>
-                        <th class="px-4 py-3">Nama Barang</th>
+                        <th class="px-4 py-3">Komoditas</th>
                         <th class="px-4 py-3">Kategori</th>
                         <th class="px-4 py-3">Jumlah</th>
                         <th class="px-4 py-3">Lokasi</th>
@@ -87,7 +87,7 @@ require_once '../../../includes/sidebar.php';
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
-            </table>
+            </table>    
         </div>
     </main>
     <!-- Modal Tambah Kategori -->
@@ -111,11 +111,10 @@ require_once '../../../includes/sidebar.php';
             </div>
         </div>
     </div>
-    <script>
-        document.getElementById('modalKategoriBg').addEventListener('click', function() {
-            document.getElementById('modalKategori').classList.add('hidden');
-        });
-    </script>
 </div>
-
+<script>
+    document.getElementById('modalKategoriBg').addEventListener('click', function() {
+        document.getElementById('modalKategori').classList.add('hidden');
+    });
+</script>
 <?php require_once '../../../includes/footer.php'; ?>

@@ -1,19 +1,24 @@
 <?php
 require_once '../../../config/functions.php';
-$pageTitle = 'Data Peminjaman';
+$pageTitle = 'Peminjaman Hari Ini';
 
-// Tanggal hari ini
-$today = date('Y-m-d');
+// Cek apakah pengguna sudah login
+if (!isset($_SESSION['login_admin'])) {
+    header('Location: ../../../auth/login_admin/login.php');
+    exit;
+}
 
 // Query peminjaman hari ini
-$peminjaman = query("SELECT
-                        p.*, u.*, b.nama_barang, d.jumlah
-                            FROM peminjaman p
-                                JOIN pengguna u ON p.id_pengguna = u.id_pengguna 
-                                JOIN detail_peminjaman d ON p.id_peminjaman = d.id_peminjaman
-                                JOIN barang b ON d.id_barang = b.id_barang
-                            WHERE p.tanggal_pinjam = '$today'
-                        ORDER BY p.created_at DESC");
+$peminjaman = query(
+    "SELECT
+        p.*, u.*, b.nama_barang, d.jumlah
+            FROM peminjaman p
+                JOIN pengguna u ON p.id_pengguna = u.id_pengguna 
+                JOIN detail_peminjaman d ON p.id_peminjaman = d.id_peminjaman
+                JOIN barang b ON d.id_barang = b.id_barang
+            WHERE p.waktu_pinjam >= CURDATE()  AND p.waktu_pinjam < CURDATE() + INTERVAL 1 DAY
+        ORDER BY p.created_at DESC"
+);
 
 require_once '../../../includes/header.php';
 require_once '../../../includes/sidebar.php';
@@ -22,29 +27,37 @@ require_once '../../../includes/sidebar.php';
     <main class="p-6">
         <div class="flex justify-between items-center mb-6">
             <div>
-                <h1 class="text-3xl font-bold"><?= $pageTitle; ?></h1>
-                <p class="text-gray-400">Berikut adalah daftar peminjaman barang hari ini.</p>
+                <h1 class="text-3xl font-bold"><?= $pageTitle; ?>.</h1>
+                <p class="text-gray-400 tracking-widest italic">~ Halaman Daftar <?= $pageTitle; ?>.</p>
             </div>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-8">
-            <div class="px-6 py-4 border-b bg-indigo-600 rounded-t-lg">
-                <span class="text-lg font-semibold text-white">Peminjaman Hari Ini (<?= $today; ?>)</span>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
+            <!-- Judul -->
+            <h1 class="text-2xl font-semibold mb-6"><?= $pageTitle; ?></h1>
+
+            <!-- Info Box -->
+            <div class="bg-yellow-600 text-gray-900 p-4 rounded-lg mb-6 border-l-4 border-yellow-400">
+                <p class="mb-2">
+                    <strong> <i data-lucide="circle-alert" class="inline-flex"></i>
+                        Setiap data peminjaman dari pengguna petugas wajib melakukan validasi</strong> dengan menekan tombol validasi pada data di tabel agar petugas bisa memberikan pertanggung jawaban jika terjadinya komoditas yang hilang. Silahkan petugas melakukan validasi jika jam kembali sudah terisi. Jika jam kembali sudah terisi maka komoditas yang dipinjam telah dikembalikan oleh pengguna tersebut.
+                </p>
+                <p class="font-semibold">
+                    Diharapkan kembali petugas sebelum melakukan validasi melakukan cek terhadap komoditas yang sudah dipinjam apakah benar sudah dikembalikan.
+                </p>
             </div>
+
             <div class="p-6 overflow-x-auto">
                 <table class="min-w-full bg-gray-800 text-sm text-white table-auto border-collapse">
                     <thead>
                         <tr class="bg-gray-700 text-left">
                             <th class="px-4 py-3">#</th>
                             <th class="px-4 py-3">Nama Pengguna</th>
-                            <th class="px-4 py-3">NIP / NIS</th>
-                            <th class="px-4 py-3">Nama Barang</th>
-                            <th class="px-4 py-3">Jumlah</th>
-                            <th class="px-4 py-3">Tanggal Pinjam</th>
-                            <th class="px-4 py-3">Tanggal Kembali</th>
-                            <th class="px-4 py-3">Catatan</th>
-                            <th class="px-4 py-3">Waktu Pengajuan</th>
-                            <th class="px-4 py-3">Status</th>
-                            <th class="px-4 py-3">Info</th>
+                            <th class="px-4 py-3">Komoditas</th>
+                            <th class="px-4 py-3">Tanggal</th>
+                            <th class="px-4 py-3">Waktu Pinjam</th>
+                            <th class="px-4 py-3">Waktu Kembali</th>
+                            <th class="px-4 py-3">Petugas</th>
+                            <th class="px-4 py-3">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,57 +65,202 @@ require_once '../../../includes/sidebar.php';
                             <?php foreach ($peminjaman as $row): ?>
                                 <tr class="border-t border-gray-700 hover:bg-gray-700">
                                     <td class="px-4 py-3"><?= $no++; ?></td>
-                                    <td class="px-4 py-3"><?= htmlspecialchars($row['nama_pengguna']); ?> - (<?= strtoupper($row['role']); ?>)</td>
-                                    <td class="px-4 py-3 underline"><?= htmlspecialchars($row['nip_nis']); ?></td>
-                                    <td class="px-4 py-3"><?= htmlspecialchars($row['nama_barang']); ?></td>
-                                    <td class="px-4 py-3 font-extralight"><?= $row['jumlah']; ?></td>
-                                    <td class="px-4 py-3 font-bold"><?= $row['tanggal_pinjam']; ?></td>
-                                    <td class="px-4 py-3 font-bold"><?= $row['tanggal_kembali']; ?></td>
-                                    <td class="px-4 py-3 italic"><?= htmlspecialchars($row['catatan']); ?> ~</td>
-                                    <td class="px-4 py-3 font-extrabold"><?= htmlspecialchars($row['created_at']); ?></td>
                                     <td class="px-4 py-3">
-                                        <?php
-                                        $status = $row['status'];
-                                        $status_label = '';
-                                        $status_class = '';
-                                        if ($status == 'dipinjam') {
-                                            $status_label = 'Dipinjam';
-                                            $status_class = 'bg-yellow-700 text-yellow-200';
-                                        } elseif ($status == 'dikembalikan') {
-                                            $status_label = 'Dikembalikan';
-                                            $status_class = 'bg-green-700 text-green-200';
-                                        } elseif ($status == 'ditolak') {
-                                            $status_label = 'Ditolak';
-                                            $status_class = 'bg-red-700 text-red-200';
-                                        } else {
-                                            $status_label = 'Menunggu';
-                                            $status_class = 'bg-gray-600 text-gray-200';
-                                        }
-                                        ?>
-                                        <span class="px-2 py-1 rounded text-xs font-semibold <?= $status_class ?>">
-                                            <?= $status_label; ?>
+                                        <span class="bg-indigo-700 text-white px-2 py-1 rounded">
+                                            <?= htmlspecialchars($row['nama_pengguna']); ?>
                                         </span>
                                     </td>
-                                    <td class="px-4 py-3">
-                                        <?php if ($row['status'] == 'dipinjam' || $row['status'] == 'dikembalikan' || $row['status'] == 'ditolak'): ?>
-                                            <span class="text-xs italic text-gray-400">DONE</span>
-                                        <?php else: ?>
-                                            <a href="info.php?id=<?= $row['id_peminjaman']; ?>&aksi=acc" class="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-xs mr-1" onclick="return confirm('Setujui peminjaman ini?')">Terima</a>
+                                    <td class="px-4 py-3"><?= htmlspecialchars($row['nama_barang']); ?></td>
 
-                                            <a href="info.php?id=<?= $row['id_peminjaman']; ?>&aksi=tolak" class="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs" onclick="return confirm('Tolak peminjaman ini?')">Tolak</a>
+                                    <?php
+                                    $datetime = $row['waktu_pinjam'];
+
+                                    // format tanggal 
+                                    $date = new DateTime($datetime);
+                                    $days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                                    $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+                                    $dayName = $days[(int)$date->format('w')];
+                                    $day = $date->format('d');
+                                    $monthName = $months[(int)$date->format('m') - 1];
+                                    $year = $date->format('Y');
+
+                                    $formattedDate = "$dayName, $day $monthName $year";
+                                    ?>
+
+                                    <!-- Tanggal -->
+                                    <td class="px-4 py-3"><?= $formattedDate ?></td>
+
+                                    <!-- Waktu Pinjam -->
+                                    <td class="px-4 py-3 font-bold">
+                                        <span class="inline-flex items-center gap-1 bg-gray-700 px-2 py-1 rounded">
+                                            <i data-lucide="clock" class="w-4 h-4"></i>
+                                            <?= $row['waktu_pinjam']; ?>
+                                        </span>
+                                    </td>
+
+                                    <!-- Waktu Kembali -->
+                                    <td class="px-4 py-3 font-bold">
+                                        <?php if (empty($row['waktu_kembali'])): ?>
+                                            <span class="inline-flex items-center gap-1 bg-yellow-700 px-2 py-1 rounded">
+                                                <i data-lucide="loader" class="w-4 h-4 animate-spin"></i>
+                                                <span>Masih berlangsung</span>
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="inline-flex items-center gap-1 bg-gray-700 px-2 py-1 rounded">
+                                                <i data-lucide="clock" class="w-4 h-4"></i>
+                                                <?= $row['waktu_kembali']; ?>
+                                            </span>
                                         <?php endif; ?>
+                                    </td>
+
+                                    <!-- Petugas -->
+                                    <td class="px-4 py-3">
+                                        <?php if ($row['status'] == 'menunggu'): ?>
+                                            <button disabled title="Menunggu validasi petugas"
+                                                class="inline-flex items-center justify-center w-8 h-8 rounded bg-yellow-500 hover:bg-yellow-600 text-white transition">
+                                                <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                                            </button>
+                                        <?php elseif ($row['status'] == 'dipinjam' || $row['status'] == 'dikembalikan'): ?>
+                                            <button disabled title="Sudah divalidasi oleh petugas"
+                                                class="inline-flex items-center justify-center w-8 h-8 rounded bg-green-700 text-white">
+                                                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                            </button>
+                                        <?php endif; ?>
+                                    </td>
+
+                                    <!-- Aksi -->
+                                    <td class="px-4 py-3">
+                                        <?php if ($row['status'] == 'menunggu'): ?>
+                                            <a title="Validasi?" href="acc_peminjaman.php?id=<?= $row['id_peminjaman']; ?>&aksi=acc" onclick="return confirm('Setujui peminjaman ini?')"
+                                                class="inline-flex items-center justify-center w-8 h-8 rounded bg-blue-500 hover:bg-blue-600 text-white transition">
+                                                <i data-lucide="user-lock" class="w-4 h-4"></i>
+                                            </a>
+                                        <?php endif; ?>
+                                        <button title="Detail peminjaman" onclick="document.getElementById('detailModal').classList.remove('hidden')" type="button"
+                                            class="inline-flex items-center gap-1 w-8 h-8 bg-green-700 hover:bg-green-800 text-white px-2 py-1 rounded text-xs">
+                                            <i data-lucide="eye" class="w-4 h-4"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="6" class="px-4 py-3 text-center text-gray-400">Tidak ada peminjaman hari ini.</td>
+                                <td colspan="11" class="py-4 px-5 text-center text-gray-500 dark:text-gray-400">
+                                    Tidak ada data peminjaman hari ini.
+                                </td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
             </div>
         </div>
+
+        <!-- Modal Overlay -->
+        <div id="detailModal" class="fixed inset-0 items-center justify-center z-50 hidden" style="background: rgba(0,0,0,0.5);">
+            <div class="flex items-center justify-center min-h-screen" id="detailModalBg">
+                <!-- Modal Content -->
+                <div class="bg-gray-900 text-gray-100 rounded-xl shadow-2xl w-11/12 max-w-5xl p-6" onclick="event.stopPropagation();">
+                    <!-- Header -->
+                    <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                        <h2 class="text-xl font-semibold">Detail Peminjaman</h2>
+                        <button onclick="document.getElementById('detailModal').classList.add('hidden')"
+                            class="text-gray-400 hover:text-gray-200">
+                            <i data-lucide="x"></i>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <!-- Kolom Kiri -->
+                        <div>
+                            <div class="bg-indigo-700 text-sm p-3 rounded-md mb-4">
+                                Data di bawah adalah detail data pengguna.
+                            </div>
+
+                            <div class="space-y-3">
+                                <div>
+                                    <p class="text-sm text-gray-400">Nomor Identitas Pengguna</p>
+                                    <div class="bg-gray-800 px-3 py-2 rounded-md"><?= $row['nip_nis']; ?></div>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-400">Nama Pengguna</p>
+                                    <div class="bg-gray-800 px-3 py-2 rounded-md"><?= $row['nama_pengguna']; ?></div>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-400">Jurusan</p>
+                                    <div class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md">
+                                        <i data-lucide="book-open" class="w-4 h-4"></i> <?= $row['jurusan']; ?>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-400">Kelas</p>
+                                    <div class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md">
+                                        <i data-lucide="building-2" class="w-4 h-4"></i> <?= $row['kelas']; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kolom Kanan -->
+                        <div>
+                            <div class="bg-indigo-700 text-sm p-3 rounded-md mb-4">
+                                Data di bawah adalah detail data peminjaman.
+                            </div>
+
+                            <div class="space-y-3">
+                                <div>
+                                    <p class="text-sm text-gray-400">Nama Komoditas</p>
+                                    <div class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md">
+                                        <i data-lucide="package" class="w-4 h-4"></i> <?= $row['nama_barang']; ?>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-400">Jumlah</p>
+                                    <div class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md">
+                                        <i data-lucide="hash" class="w-4 h-4"></i> <?= $row['jumlah']; ?>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <p class="text-sm text-gray-400">Waktu Pinjam</p>
+                                        <div class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md min-h-[38px]">
+                                            <i data-lucide="clock" class="w-4 h-4"></i> <?= $row['waktu_pinjam']; ?>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-400">Waktu Kembali</p>
+                                        <div class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md min-h-[38px]">
+                                            <i data-lucide="clock" class="w-4 h-4"></i> <?= $row['waktu_kembali']; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-400">Status</p>
+                                    <div class="bg-gray-800 px-3 py-2 rounded-md"><?= $row['status']; ?></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-sm text-gray-400">Catatan</p>
+                        <textarea disabled class="w-full bg-gray-800 text-white px-3 py-2 rounded-md" rows="4"><?= $row['catatan']; ?></textarea>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="flex justify-end mt-6 border-t border-gray-700 pt-4">
+                        <button onclick="document.getElementById('detailModal').classList.add('hidden')"
+                            class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-md">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 </div>
+<script>
+    document.getElementById('detailModalBg').addEventListener('click', function() {
+        document.getElementById('detailModal').classList.add('hidden');
+    });
+</script>
 <?php require_once '../../../includes/footer.php'; ?>
