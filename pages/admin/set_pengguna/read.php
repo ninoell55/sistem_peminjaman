@@ -45,7 +45,7 @@ require_once '../../../includes/sidebar.php';
                         <th class="px-4 py-3">Role</th>
                         <th class="px-4 py-3">Kelas</th>
                         <th class="px-4 py-3">Jurusan</th>
-                        <th class="px-4 py-3">NIP / NIS</th>
+                        <th class="px-4 py-3">Nomor Identitas</th>
                         <th class="px-4 py-3">Aksi</th>
                     </tr>
                 </thead>
@@ -130,7 +130,7 @@ require_once '../../../includes/sidebar.php';
                         </div>
                     </div>
                     <div>
-                        <label class="block mb-1 font-medium">NIP / NIS</label>
+                        <label class="block mb-1 font-medium">Nomor Identitas</label>
                         <input type="text" name="nip_nis" id="edit_nip_nis" class="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     </div>
                     <div class="flex justify-end gap-2 pt-2">
@@ -182,7 +182,7 @@ require_once '../../../includes/sidebar.php';
                         </div>
                     </div>
                     <div>
-                        <label class="block mb-1 font-medium">NIP / NIS</label>
+                        <label class="block mb-1 font-medium">Nomor Identitas</label>
                         <input type="text" name="nip_nis" id="field_nip_nis" class="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     </div>
                     <div class="flex justify-end gap-2 pt-2">

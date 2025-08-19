@@ -912,14 +912,6 @@
     --tw-font-weight: var(--font-weight-extrabold);
     font-weight: var(--font-weight-extrabold);
   }
-  .font-extralight {
-    --tw-font-weight: var(--font-weight-extralight);
-    font-weight: var(--font-weight-extralight);
-  }
-  .font-light {
-    --tw-font-weight: var(--font-weight-light);
-    font-weight: var(--font-weight-light);
-  }
   .font-medium {
     --tw-font-weight: var(--font-weight-medium);
     font-weight: var(--font-weight-medium);
@@ -967,9 +959,6 @@
   .text-gray-900 {
     color: var(--color-gray-900);
   }
-  .text-green-200 {
-    color: var(--color-green-200);
-  }
   .text-green-400 {
     color: var(--color-green-400);
   }
@@ -987,9 +976,6 @@
   }
   .text-indigo-700 {
     color: var(--color-indigo-700);
-  }
-  .text-red-200 {
-    color: var(--color-red-200);
   }
   .text-red-400 {
     color: var(--color-red-400);
@@ -1196,13 +1182,6 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-green-500);
-      }
-    }
-  }
-  .hover\:bg-green-600 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-green-600);
       }
     }
   }

@@ -20,6 +20,7 @@ $q_kategori = query("SELECT id_kategori, nama_kategori FROM kategori ORDER BY na
 require_once '../../../includes/header.php';
 require_once '../../../includes/sidebar.php';
 ?>
+
 <div class="md:ml-64 min-h-screen bg-gray-900 text-white p-6 pt-16 md:pt-24">
     <main class="flex-1 md:p-6">
         <!-- Header + Search -->
@@ -89,4 +90,5 @@ require_once '../../../includes/sidebar.php';
         </div>
     </main>
 </div>
+
 <?php require_once '../../../includes/footer.php'; ?>

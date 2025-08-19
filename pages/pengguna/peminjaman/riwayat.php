@@ -12,7 +12,7 @@ $id_pengguna = $_SESSION['id_pengguna'] ?? null;
 $nama_pengguna = $_SESSION['nama_pengguna'] ?? '';
 
 $riwayat = query("SELECT 
-                    p.*, b.nama_barang, d.jumlah, p.status, p.tanggal_pinjam, p.tanggal_kembali
+                    p.*, b.nama_barang, d.jumlah, p.status, p.waktu_pinjam, p.waktu_kembali
                         FROM peminjaman p
                                 JOIN detail_peminjaman d ON p.id_peminjaman = d.id_peminjaman
                                 JOIN barang b ON d.id_barang = b.id_barang

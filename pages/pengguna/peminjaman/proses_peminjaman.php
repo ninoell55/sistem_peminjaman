@@ -13,16 +13,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $id_pengguna = $_SESSION['id_pengguna'] ?? null;
     $id_barang = $_POST['id_barang'] ?? null;
-    $tanggal_pinjam = $_POST['tanggal_pinjam'] ?? date('Y-m-d');
-    $tanggal_kembali = $_POST['tanggal_kembali'] ?? date('Y-m-d', strtotime('+7 days'));
+    $waktu_pinjam = $_POST['waktu_pinjam'] ?? date('Y-m-d');
+    $waktu_kembali = $_POST['waktu_kembali'] ?? date('Y-m-d', strtotime('+7 days'));
     $jumlah = $_POST['jumlah'] ?? 1;
     $status = 'menunggu';
     $catatan = $_POST['catatan'] ?? '';
 
     // Insert data peminjaman
-    $sql = "INSERT INTO peminjaman (id_pengguna, tanggal_pinjam, tanggal_kembali, status, catatan) VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO peminjaman (id_pengguna, waktu_pinjam, waktu_kembali, status, catatan) VALUES (?, ?, ?, ?, ?)";
     $stmt = $connection->prepare($sql);
-    $stmt->bind_param("issss", $id_pengguna, $tanggal_pinjam, $tanggal_kembali, $status, $catatan);
+    $stmt->bind_param("issss", $id_pengguna, $waktu_pinjam, $waktu_kembali, $status, $catatan);
 
     // execute the statement peminjaman
     if ($stmt->execute()) {

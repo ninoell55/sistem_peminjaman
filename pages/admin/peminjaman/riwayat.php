@@ -29,6 +29,7 @@ $riwayat = query(
 require_once '../../../includes/header.php';
 require_once '../../../includes/sidebar.php';
 ?>
+
 <div class="md:ml-64 min-h-screen bg-gray-900 text-white p-6 pt-24">
     <main class="p-6">
         <div class="flex justify-between items-center mb-6">
@@ -37,6 +38,7 @@ require_once '../../../includes/sidebar.php';
                 <p class="text-gray-400 tracking-widest italic">~ Halaman Daftar <?= $pageTitle; ?>.</p>
             </div>
         </div>
+
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
             <!-- Judul -->
             <h1 class="text-2xl font-semibold mb-6"><?= $pageTitle; ?></h1>
@@ -282,9 +284,11 @@ require_once '../../../includes/sidebar.php';
         </div>
     </main>
 </div>
+
 <script>
     document.getElementById('detailModalBg').addEventListener('click', function() {
         document.getElementById('detailModal').classList.add('hidden');
     });
 </script>
+
 <?php require_once '../../../includes/footer.php';

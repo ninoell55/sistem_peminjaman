@@ -1,5 +1,8 @@
-// Icon library initialization
-lucide.createIcons();
+document.addEventListener("DOMContentLoaded", () => {
+  lucide.createIcons();
+
+  // lanjut semua fitur lain
+});
 
 // Sidebar toggle functionality
 document.addEventListener("DOMContentLoaded", function () {
@@ -117,8 +120,15 @@ if (modalPenggunaBg) {
 
 // BARANG ------->>
 function loadBarang() {
-  let search = document.getElementById("search").value;
-  let kategori = document.getElementById("kategori").value;
+  const searchInput = document.getElementById("search");
+  const kategoriSelect = document.getElementById("kategori");
+  const dataBarang = document.getElementById("dataBarang");
+
+  // kalau salah satu elemen nggak ada, stop fungsi
+  if (!searchInput || !kategoriSelect || !dataBarang) return;
+
+  let search = searchInput.value;
+  let kategori = kategoriSelect.value;
 
   let xhr = new XMLHttpRequest();
   xhr.open(
@@ -128,16 +138,92 @@ function loadBarang() {
   );
   xhr.onload = function () {
     if (this.status == 200) {
-      document.getElementById("dataBarang").innerHTML = this.responseText;
+      dataBarang.innerHTML = this.responseText;
+
+      // render ulang lucide icons setelah data dimuat
+      if (window.lucide) {
+        lucide.createIcons();
+      }
     }
   };
   xhr.send();
 }
 
 // load pertama kali
-window.onload = loadBarang;
+window.addEventListener("load", loadBarang);
 
 // jalankan saat ketik / ubah filter
-document.getElementById("search").addEventListener("keyup", loadBarang);
-document.getElementById("kategori").addEventListener("change", loadBarang);
+const searchInput = document.getElementById("search");
+const kategoriSelect = document.getElementById("kategori");
+
+if (searchInput) {
+  searchInput.addEventListener("keyup", loadBarang);
+}
+if (kategoriSelect) {
+  kategoriSelect.addEventListener("change", loadBarang);
+}
 // end-BARANG <<-------
+
+document.addEventListener("DOMContentLoaded", () => {
+  const detailButtons = document.querySelectorAll(".openDetail");
+  const modal = document.getElementById("detailModal");
+  const modalBg = document.getElementById("detailModalBg");
+
+  if (detailButtons.length > 0 && modal && modalBg) {
+    detailButtons.forEach((btn) => {
+      btn.addEventListener("click", function () {
+        document.getElementById("detailNO").textContent = this.dataset.nip;
+
+        const role = this.dataset.role;
+
+        // Tambahkan ikon di nama
+        document.getElementById("detailNama").textContent = this.dataset.nama;
+
+        if (role === "siswa") {
+          document.getElementById("detailJurusan").innerHTML = `
+          <i data-lucide="book-open" class="w-4 h-4"></i> ${this.dataset.jurusan}
+        `;
+          document.getElementById("detailKelas").innerHTML = `
+          <i data-lucide="building-2" class="w-4 h-4"></i> ${this.dataset.kelas}
+        `;
+        } else {
+          document.getElementById("detailJurusan").textContent = "-";
+          document.getElementById("detailKelas").textContent = "-";
+        }
+
+        document.getElementById("detailBarang").innerHTML = `
+          <i data-lucide="package" class="w-4 h-4"></i> ${this.dataset.barang}
+        `;
+
+        document.getElementById("detailJumlah").innerHTML = `
+          <i data-lucide="hash" class="w-4 h-4"></i> ${this.dataset.jumlah}
+        `;
+
+        document.getElementById("detailPinjam").innerHTML = `
+          <i data-lucide="clock" class="w-4 h-4"></i> ${this.dataset.pinjam}
+        `;
+
+        document.getElementById("detailKembali").innerHTML = `
+          <i data-lucide="clock" class="w-4 h-4"></i> ${this.dataset.kembali}
+        `;
+
+        document.getElementById("detailStatus").textContent =
+          this.dataset.status;
+        document.getElementById("detailCatatan").textContent =
+          this.dataset.catatan;
+
+        // Render ikon Lucide
+        if (window.lucide) {
+          lucide.createIcons();
+        }
+
+        modal.classList.remove("hidden");
+      });
+    });
+
+    // klik area bg untuk tutup modal
+    modalBg.addEventListener("click", () => {
+      modal.classList.add("hidden");
+    });
+  }
+});

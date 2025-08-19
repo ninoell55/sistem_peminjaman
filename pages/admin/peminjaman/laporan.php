@@ -29,6 +29,7 @@ $laporan = query(
 require_once '../../../includes/header.php';
 require_once '../../../includes/sidebar.php';
 ?>
+
 <div class="md:ml-64 min-h-screen bg-gray-900 text-white p-6 pt-24">
     <main class="p-6">
         <div class="flex justify-between items-center mb-6">
@@ -37,6 +38,7 @@ require_once '../../../includes/sidebar.php';
                 <p class="text-gray-400 tracking-widest italic">~ Halaman <?= $pageTitle; ?>.</p>
             </div>
         </div>
+        
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-8">
             <div class="px-6 py-4 border-b bg-indigo-600 rounded-t-lg">
                 <span class="text-lg font-semibold text-white">Filter Laporan</span>
@@ -197,6 +199,7 @@ require_once '../../../includes/sidebar.php';
                 </div>
             </div>
         </div>
+
         <!-- Modal Overlay -->
         <div id="detailModal" class="fixed inset-0 items-center justify-center z-50 hidden" style="background: rgba(0,0,0,0.5);">
             <div class="flex items-center justify-center min-h-screen" id="detailModalBg">
@@ -299,9 +302,11 @@ require_once '../../../includes/sidebar.php';
         </div>
     </main>
 </div>
+
 <script>
     document.getElementById('detailModalBg').addEventListener('click', function() {
         document.getElementById('detailModal').classList.add('hidden');
     });
 </script>
+
 <?php require_once '../../../includes/footer.php'; ?>
