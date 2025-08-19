@@ -94,7 +94,6 @@ function login_pengguna($connection, $username, $password)
 // Function -- LOGIN--end >>
 
 
-
 // <<< SELECT DATA
 function query($query)
 {
@@ -113,26 +112,3 @@ function query($query)
     return $rows;
 }
 // SELECT DATA >>>
-
-
-function tambahBarang($data)
-{
-    global $conn;
-
-    $nama_barang = htmlspecialchars($data['nama_barang']);
-    $id_kategori = intval($data['id_kategori']);
-    $jumlah_total = intval($data['jumlah_total']);
-    $jumlah_tersedia = intval($data['jumlah_tersedia']);
-    $lokasi = htmlspecialchars($data['lokasi']);
-    $kondisi = htmlspecialchars($data['kondisi']);
-    $deskripsi = htmlspecialchars($data['deskripsi']);
-
-    $query = "INSERT INTO barang 
-                (nama_barang, id_kategori, jumlah_total, jumlah_tersedia, lokasi, kondisi, deskripsi, created_at) 
-              VALUES 
-                ('$nama_barang', $id_kategori, $jumlah_total, $jumlah_tersedia, '$lokasi', '$kondisi', '$deskripsi', NOW())";
-
-    mysqli_query($conn, $query);
-
-    return mysqli_affected_rows($conn);
-}
