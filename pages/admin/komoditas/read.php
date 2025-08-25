@@ -42,12 +42,12 @@ require_once '../../../includes/sidebar.php';
                     <tr class="bg-gray-700 text-left">
                         <th class="px-4 py-3">#</th>
                         <th class="px-4 py-3">Komoditas</th>
-                        <th class="px-4 py-3">Kategori</th>
+                        <!-- <th class="px-4 py-3">Kategori</th> -->
                         <th class="px-4 py-3">Jumlah</th>
                         <th class="px-4 py-3">Lokasi</th>
-                        <th class="px-4 py-3">Kondisi</th>
-                        <th class="px-4 py-3">Image</th>
-                        <th class="px-4 py-3">Deskripsi</th>
+                        <!-- <th class="px-4 py-3">Kondisi</th> -->
+                        <!-- <th class="px-4 py-3">Image</th> -->
+                        <!-- <th class="px-4 py-3">Deskripsi</th> -->
                         <th class="px-4 py-3">Aksi</th>
                     </tr>
                 </thead>
@@ -57,11 +57,11 @@ require_once '../../../includes/sidebar.php';
                         <tr class="border-t border-gray-700 hover:bg-gray-700">
                             <td class="px-4 py-3"><?= $no++ ?></td>
                             <td class="px-4 py-3"><?= htmlspecialchars($row['nama_barang']) ?></td>
-                            <td class="px-4 py-3"><?= htmlspecialchars($row['nama_kategori']) ?></td>
+                            <!-- <td class="px-4 py-3"><?= htmlspecialchars($row['nama_kategori']) ?></td> -->
                             <td class="px-4 py-3"><?= $row['jumlah_tersedia'] ?> / <?= $row['jumlah_total'] ?></td>
                             <td class="px-4 py-3"><?= htmlspecialchars($row['lokasi']) ?></td>
-                            <td class="px-4 py-3"><?= htmlspecialchars($row['kondisi']) ?></td>
-                            <td class="px-4 py-3">
+                            <!-- <td class="px-4 py-3"><?= htmlspecialchars($row['kondisi']) ?></td> -->
+                            <!-- <td class="px-4 py-3">
                                 <?php if (!empty($row['image'])): ?>
                                     <div class="flex items-center justify-center w-20 h-20">
                                         <img src="../../../assets/uploads/<?= htmlspecialchars($row['image']); ?>"
@@ -73,23 +73,44 @@ require_once '../../../includes/sidebar.php';
                                         Tidak ada gambar
                                     </div>
                                 <?php endif; ?>
-                            </td>
-                            <td class="px-4 py-3 max-w-xl"><?= htmlspecialchars($row['deskripsi']) ?></td>
+                            </td> -->
+                            <!-- <td class="px-4 py-3 max-w-xl"><?= htmlspecialchars($row['deskripsi']) ?></td> -->
                             <td class="px-4 py-3 flex gap-2">
-                                <a href="update.php?id=<?= $row['id_barang'] ?>" class="text-yellow-400 hover:underline text-sm flex items-center">
+                                <!-- Link Edit -->
+                                <a href="update.php?id=<?= $row['id_barang'] ?>"
+                                    class="text-yellow-400 hover:underline text-sm flex items-center">
                                     <i data-lucide="rotate-ccw-square" class="w-4 h-4 mr-1"></i>Edit
                                 </a>
-                                <a href="delete.php?id=<?= $row['id_barang'] ?>" class="text-red-400 hover:underline text-sm flex items-center"
+
+                                <!-- Link Hapus -->
+                                <a href="delete.php?id=<?= $row['id_barang'] ?>"
+                                    class="text-red-400 hover:underline text-sm flex items-center"
                                     onclick="return confirm('Apakah Anda yakin ingin menghapus barang ini?');">
                                     <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i>Hapus
+                                </a>
+
+                                <!-- Link Detail -->
+                                <a href="#"
+                                    class="text-blue-400 hover:underline text-sm flex items-center"
+                                    onclick="openDetailModal(
+                                        '<?= $row['nama_barang'] ?>',
+                                        '<?= $row['jumlah_total'] ?>',
+                                        '<?= $row['jumlah_tersedia'] ?>',
+                                        '<?= $row['lokasi'] ?>',
+                                        '<?= $row['kondisi'] ?>',
+                                        '../../../assets/uploads/<?= $row['image'] ?>',
+                                        '<?= $row['deskripsi'] ?>'
+                                    )">
+                                    <i data-lucide="info" class="w-4 h-4 mr-1"></i>Detail
                                 </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
-            </table>    
+            </table>
         </div>
     </main>
+
     <!-- Modal Tambah Kategori -->
     <div id="modalKategori" class="fixed inset-0 z-50 hidden" style="background: rgba(0,0,0,0.5);">
         <div class="flex items-center justify-center min-h-screen" id="modalKategoriBg">
@@ -111,10 +132,87 @@ require_once '../../../includes/sidebar.php';
             </div>
         </div>
     </div>
+
+    <!-- Modal Detail Barang -->
+    <div id="detailModal" class="fixed inset-0 items-center justify-center z-50 hidden" style="background: rgba(0,0,0,0.5);">
+        <div class="flex items-center justify-center min-h-screen" id="detailModalBg">
+            <!-- Modal Content -->
+            <div class="bg-gray-900 text-gray-100 rounded-xl shadow-2xl w-11/12 max-w-5xl p-6" onclick="event.stopPropagation();">
+                <!-- Header -->
+                <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                    <h2 class="text-xl font-semibold flex items-center gap-2">
+                        <i data-lucide="package"></i> Detail Barang
+                    </h2>
+                    <button onclick="document.getElementById('detailModal').classList.add('hidden')"
+                        class="text-gray-400 hover:text-gray-200">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <!-- Kolom Kiri -->
+                    <div>
+                        <div class="bg-indigo-700 text-sm p-3 rounded-md mb-4 flex items-center gap-2">
+                            <i data-lucide="info"></i>
+                            <span>Data di bawah adalah detail data komoditas.</span>
+                        </div>
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-sm text-gray-400 flex items-center gap-1">Komoditas</p>
+                                <div id="detailKomoditas" class="bg-gray-800 px-3 py-2 rounded-md"></div>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-400 flex items-center gap-1">Jumlah Total</p>
+                                <div id="detailTotal" class="bg-gray-800 px-3 py-2 rounded-md"></div>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-400 flex items-center gap-1">Jumlah Tersedia</p>
+                                <div id="detailTersedia" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-400 flex items-center gap-1">Lokasi</p>
+                                <div id="detailLokasi" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kolom Kanan -->
+                    <div>
+                        <div class="bg-indigo-700 text-sm p-3 rounded-md mb-4 flex items-center gap-2">
+                            <i data-lucide="info"></i>
+                            <span>Data di bawah adalah detail kondisi & gambar.</span>
+                        </div>
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-sm text-gray-400 flex items-center gap-1">Kondisi</p>
+                                <div id="detailKondisi" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-400 flex items-center gap-1">Image</p>
+                                <div id="detailImage" class="bg-gray-800 p-3 rounded-md flex justify-center items-center min-h-[185px]">
+                                    <img src="" alt="Image Barang" class="max-h-56 object-contain rounded-md hidden">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- Tutup grid -->
+
+                <!-- Deskripsi Full Width -->
+                <div class="mt-6">
+                    <p class="text-sm text-gray-400 flex items-center gap-1">Deskripsi</p>
+                    <div id="detailDeskripsi" class="bg-gray-800 px-3 py-3 rounded-md min-h-[120px]"></div>
+                </div>
+
+                <!-- Footer -->
+                <div class="flex justify-end mt-6 border-t border-gray-700 pt-4">
+                    <button onclick="document.getElementById('detailModal').classList.add('hidden')"
+                        class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-md flex items-center gap-2">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<script>
-    document.getElementById('modalKategoriBg').addEventListener('click', function() {
-        document.getElementById('modalKategori').classList.add('hidden');
-    });
-</script>
+
 <?php require_once '../../../includes/footer.php'; ?>

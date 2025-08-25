@@ -38,7 +38,7 @@ require_once '../../../includes/sidebar.php';
                 <p class="text-gray-400 tracking-widest italic">~ Halaman <?= $pageTitle; ?>.</p>
             </div>
         </div>
-        
+
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-8">
             <div class="px-6 py-4 border-b bg-indigo-600 rounded-t-lg">
                 <span class="text-lg font-semibold text-white">Filter Laporan</span>
@@ -182,8 +182,22 @@ require_once '../../../includes/sidebar.php';
                                                     <i data-lucide="user-lock" class="w-4 h-4"></i>
                                                 </a>
                                             <?php endif; ?>
-                                            <button title="Detail laporan" onclick="document.getElementById('detailModal').classList.remove('hidden')" type="button"
-                                                class="inline-flex items-center gap-1 w-8 h-8 bg-green-700 hover:bg-green-800 text-white px-2 py-1 rounded text-xs">
+                                            <button title="Detail peminjaman" type="button"
+                                                class="openDetail inline-flex items-center gap-1 w-8 h-8 bg-green-700 hover:bg-green-800 text-white px-2 py-1 rounded text-xs"
+
+                                                data-nip="<?= $row['nip_nis']; ?>"
+                                                data-nama="<?= $row['nama_pengguna']; ?>"
+                                                data-role="<?= $row['role'] ?>"
+                                                data-jurusan="<?= $row['jurusan']; ?>"
+                                                data-kelas="<?= $row['kelas']; ?>"
+                                                data-barang="<?= $row['nama_barang']; ?>"
+                                                data-jumlah="<?= $row['jumlah']; ?>"
+                                                data-tanggal="<?= $formattedDate; ?>"
+                                                data-pinjam="<?= $row['waktu_pinjam']; ?>"
+                                                data-kembali="<?= $row['waktu_kembali']; ?>"
+                                                data-status="<?= $row['status']; ?>"
+                                                data-catatan="<?= $row['catatan']; ?>">
+
                                                 <i data-lucide="eye" class="w-4 h-4"></i>
                                             </button>
                                         </td>
@@ -217,80 +231,82 @@ require_once '../../../includes/sidebar.php';
                     <div class="grid grid-cols-2 gap-6">
                         <!-- Kolom Kiri -->
                         <div>
-                            <div class="bg-indigo-700 text-sm p-3 rounded-md mb-4">
-                                Data di bawah adalah detail data pengguna.
+                            <div class="bg-indigo-700 text-sm p-3 rounded-md mb-4 flex items-center gap-2">
+                                <i data-lucide="info"></i>
+                                <span>Data di bawah adalah detail data pengguna.</span>
                             </div>
-
                             <div class="space-y-3">
-                                <div>
-                                    <p class="text-sm text-gray-400">Nomor Identitas Pengguna</p>
-                                    <div class="bg-gray-800 px-3 py-2 rounded-md"><?= $row['nip_nis']; ?></div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <p class="text-sm text-gray-400">Nomor Identitas Pengguna</p>
+                                        <div id="detailNO" class="bg-gray-800 px-3 py-2 rounded-md"></div>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-400">Nama Pengguna</p>
+                                        <div id="detailNama" class="bg-gray-800 px-3 py-2 rounded-md"></div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="text-sm text-gray-400">Nama Pengguna</p>
-                                    <div class="bg-gray-800 px-3 py-2 rounded-md"><?= $row['nama_pengguna']; ?></div>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-400">Jurusan</p>
-                                    <div class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md">
-                                        <i data-lucide="book-open" class="w-4 h-4"></i> <?= $row['jurusan']; ?>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <p class="text-sm text-gray-400">Jurusan</p>
+                                        <div id="detailJurusan" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-400">Kelas</p>
+                                        <div id="detailKelas" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
                                     </div>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-400">Kelas</p>
-                                    <div class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md">
-                                        <i data-lucide="building-2" class="w-4 h-4"></i> <?= $row['kelas']; ?>
-                                    </div>
+                                    <p class="text-sm text-gray-400">Role</p>
+                                    <div id="detailRole" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Kolom Kanan -->
                         <div>
-                            <div class="bg-indigo-700 text-sm p-3 rounded-md mb-4">
-                                Data di bawah adalah detail data riwayat peminjaman.
+                            <div class="bg-indigo-700 text-sm p-3 rounded-md mb-4 flex items-center gap-2">
+                                <i data-lucide="info"></i>
+                                <span>Data di bawah adalah detail data peminjaman.</span>
                             </div>
-
                             <div class="space-y-3">
-                                <div>
-                                    <p class="text-sm text-gray-400">Nama Komoditas</p>
-                                    <div class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md">
-                                        <i data-lucide="package" class="w-4 h-4"></i> <?= $row['nama_barang']; ?>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <p class="text-sm text-gray-400">Nama Komoditas</p>
+                                        <div id="detailBarang" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-400">Jumlah</p>
+                                        <div id="detailJumlah" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
                                     </div>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-400">Jumlah</p>
-                                    <div class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md">
-                                        <i data-lucide="hash" class="w-4 h-4"></i> <?= $row['jumlah']; ?>
-                                    </div>
+                                    <p class="text-sm text-gray-400">Tanggal</p>
+                                    <div id="detailTanggal" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-3">
                                     <div>
                                         <p class="text-sm text-gray-400">Waktu Pinjam</p>
-                                        <div class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md min-h-[38px]">
-                                            <i data-lucide="clock" class="w-4 h-4"></i> <?= $row['waktu_pinjam']; ?>
-                                        </div>
+                                        <div id="detailPinjam" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md min-h-[38px]"></div>
                                     </div>
                                     <div>
                                         <p class="text-sm text-gray-400">Waktu Kembali</p>
-                                        <div class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md min-h-[38px]">
-                                            <i data-lucide="clock" class="w-4 h-4"></i> <?= $row['waktu_kembali']; ?>
-                                        </div>
+                                        <div id="detailKembali" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md min-h-[38px]"></div>
                                     </div>
                                 </div>
                                 <div>
                                     <p class="text-sm text-gray-400">Status</p>
-                                    <div class="bg-gray-800 px-3 py-2 rounded-md"><?= $row['status']; ?></div>
+                                    <div id="detailStatus" class="bg-gray-800 px-3 py-2 rounded-md"></div>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-400">Catatan</p>
+                                    <textarea id="detailCatatan" class="w-full bg-gray-800 text-white px-3 py-2 rounded-md" rows="4" disabled></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="mt-4">
-                        <p class="text-sm text-gray-400">Catatan</p>
-                        <textarea disabled class="w-full bg-gray-800 text-white px-3 py-2 rounded-md" rows="4"><?= $row['catatan']; ?></textarea>
-                    </div>
 
-                    <!-- Footer -->
+                    <!-- Footer di luar grid -->
                     <div class="flex justify-end mt-6 border-t border-gray-700 pt-4">
                         <button onclick="document.getElementById('detailModal').classList.add('hidden')"
                             class="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-md">
@@ -302,11 +318,5 @@ require_once '../../../includes/sidebar.php';
         </div>
     </main>
 </div>
-
-<script>
-    document.getElementById('detailModalBg').addEventListener('click', function() {
-        document.getElementById('detailModal').classList.add('hidden');
-    });
-</script>
 
 <?php require_once '../../../includes/footer.php'; ?>

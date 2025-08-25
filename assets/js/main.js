@@ -164,6 +164,76 @@ if (kategoriSelect) {
 }
 // end-BARANG <<-------
 
+// DETAIL BARANG ------->>
+// Tutup modal kategori (hanya kalau ada elemen)
+const modalKategoriBg = document.getElementById("modalKategoriBg");
+if (modalKategoriBg) {
+  modalKategoriBg.addEventListener("click", function () {
+    const modalKategori = document.getElementById("modalKategori");
+    if (modalKategori) {
+      modalKategori.classList.add("hidden");
+    }
+  });
+}
+
+// Fungsi openDetailModal (cek semua elemen dulu)
+function openDetailModal(
+  komoditas,
+  total,
+  tersedia,
+  lokasi,
+  kondisi,
+  image,
+  deskripsi
+) {
+  const detailModal = document.getElementById("detailModal");
+  if (!detailModal) return; // kalau modal tidak ada, langsung keluar
+
+  const komoditasEl = document.getElementById("detailKomoditas");
+  const totalEl = document.getElementById("detailTotal");
+  const tersediaEl = document.getElementById("detailTersedia");
+  const lokasiEl = document.getElementById("detailLokasi");
+  const kondisiEl = document.getElementById("detailKondisi");
+  const deskripsiEl = document.getElementById("detailDeskripsi");
+  const imgContainer = document.getElementById("detailImage");
+
+  if (komoditasEl) komoditasEl.textContent = komoditas || "-";
+  if (totalEl) totalEl.textContent = total || "-";
+  if (tersediaEl) tersediaEl.textContent = tersedia || "-";
+  if (lokasiEl) lokasiEl.textContent = lokasi || "-";
+  if (kondisiEl) kondisiEl.textContent = kondisi || "-";
+  if (deskripsiEl) deskripsiEl.textContent = deskripsi || "-";
+
+  // Handle gambar
+  if (imgContainer) {
+    imgContainer.innerHTML = "";
+    if (image) {
+      let img = document.createElement("img");
+      img.src = image;
+      img.alt = komoditas;
+      img.classList.add("max-h-32", "rounded-md");
+      imgContainer.appendChild(img);
+    } else {
+      imgContainer.textContent = "-";
+    }
+  }
+
+  detailModal.classList.remove("hidden");
+}
+
+// supaya bisa tutup modal klik background (jika ada)
+const detailModalBg = document.getElementById("detailModalBg");
+if (detailModalBg) {
+  detailModalBg.addEventListener("click", function () {
+    const detailModal = document.getElementById("detailModal");
+    if (detailModal) {
+      detailModal.classList.add("hidden");
+    }
+  });
+}
+// end-DETAIl BARANG <<-------
+
+// DETAIL PEMINJAMAN ------->>
 document.addEventListener("DOMContentLoaded", () => {
   const detailButtons = document.querySelectorAll(".openDetail");
   const modal = document.getElementById("detailModal");
@@ -191,12 +261,20 @@ document.addEventListener("DOMContentLoaded", () => {
           document.getElementById("detailKelas").textContent = "-";
         }
 
+        document.getElementById("detailRole").innerHTML = `
+          <i data-lucide="contact" class="w-4 h-4"></i> ${this.dataset.role}
+        `;
+
         document.getElementById("detailBarang").innerHTML = `
           <i data-lucide="package" class="w-4 h-4"></i> ${this.dataset.barang}
         `;
 
         document.getElementById("detailJumlah").innerHTML = `
           <i data-lucide="hash" class="w-4 h-4"></i> ${this.dataset.jumlah}
+        `;
+
+        document.getElementById("detailTanggal").innerHTML = `
+          <i data-lucide="calendar" class="w-4 h-4"></i> ${this.dataset.tanggal}
         `;
 
         document.getElementById("detailPinjam").innerHTML = `
@@ -227,3 +305,74 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+// end-DETAIl PEMINJAMAN <<-------
+
+// Tutup modal peminjaman (jika ada)
+const modalPeminjamanBg = document.getElementById("modalPeminjamanBg");
+if (modalPeminjamanBg) {
+  modalPeminjamanBg.addEventListener("click", function () {
+    const modal = document.getElementById("modalPeminjaman");
+    if (modal) modal.classList.add("hidden");
+  });
+}
+
+// Tutup modal detail (jika ada)
+const detailModalPeminjamanBg = document.getElementById("detailModalBg");
+if (detailModalPeminjamanBg) {
+  detailModalPeminjamanBg.addEventListener("click", function () {
+    const modal = document.getElementById("detailModal");
+    if (modal) modal.classList.add("hidden");
+  });
+}
+
+// Tutup modal edit peminjaman (jika ada)
+const modalEditPeminjamanBg = document.getElementById("modalEditPeminjamanBg");
+if (modalEditPeminjamanBg) {
+  modalEditPeminjamanBg.addEventListener("click", function () {
+    const modal = document.getElementById("modalEditPeminjaman");
+    if (modal) modal.classList.add("hidden");
+  });
+}
+
+// Fungsi buka modal edit peminjaman
+function openEditPeminjamanModal(button) {
+  try {
+    let data = JSON.parse(button.getAttribute("data-row"));
+
+    const modal = document.getElementById("modalEditPeminjaman");
+    if (!modal) return; // aman, kalau modal nggak ada
+
+    modal.classList.remove("hidden");
+
+    // isi form kalau field ada
+    const idPeminjaman = document.getElementById("edit_id_peminjaman");
+    if (idPeminjaman) idPeminjaman.value = data.id_peminjaman;
+
+    const waktuPinjam = document.getElementById("edit_waktu_pinjam");
+    if (waktuPinjam) waktuPinjam.value = formatDateTime(data.waktu_pinjam);
+
+    const idBarang = document.getElementById("edit_id_barang");
+    if (idBarang) idBarang.value = data.id_barang;
+
+    const jumlah = document.getElementById("edit_jumlah");
+    if (jumlah) jumlah.value = data.jumlah;
+
+    const catatan = document.getElementById("edit_catatan");
+    if (catatan) catatan.value = data.catatan ?? "";
+  } catch (e) {
+    console.error("Gagal membuka modal edit peminjaman:", e);
+  }
+}
+
+// fungsi format datetime-local
+function formatDateTime(datetimeString) {
+  if (!datetimeString) return "";
+  const d = new Date(datetimeString);
+  if (isNaN(d)) return datetimeString; // fallback
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  const hours = String(d.getHours()).padStart(2, "0");
+  const minutes = String(d.getMinutes()).padStart(2, "0");
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}

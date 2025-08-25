@@ -118,7 +118,7 @@ require_once '../../../includes/sidebar.php';
 
                                     <!-- Petugas -->
                                     <td class="px-4 py-3">
-                                        <?php if ($row['status'] == 'menunggu'): ?>
+                                        <?php if ($row['status'] == 'menunggu' || $row['status'] == 'menunggu_pengembalian'): ?>
                                             <button disabled title="Menunggu validasi petugas"
                                                 class="inline-flex items-center justify-center w-8 h-8 rounded bg-yellow-500 hover:bg-yellow-600 text-white transition">
                                                 <i data-lucide="alert-circle" class="w-4 h-4"></i>
@@ -134,11 +134,23 @@ require_once '../../../includes/sidebar.php';
                                     <!-- Aksi -->
                                     <td class="px-4 py-3">
                                         <?php if ($row['status'] == 'menunggu'): ?>
-                                            <a title="Validasi?" href="acc_peminjaman.php?id=<?= $row['id_peminjaman']; ?>&aksi=acc" onclick="return confirm('Setujui peminjaman ini?')"
+                                            <!-- ACC peminjaman -->
+                                            <a title="Validasi Peminjaman"
+                                                href="acc_peminjaman.php?id=<?= $row['id_peminjaman']; ?>&aksi=acc"
+                                                onclick="return confirm('Setujui peminjaman ini?')"
+                                                class="inline-flex items-center justify-center w-8 h-8 rounded bg-blue-500 hover:bg-blue-600 text-white transition">
+                                                <i data-lucide="user-lock" class="w-4 h-4"></i>
+                                            </a>
+                                        <?php elseif ($row['status'] == 'menunggu_pengembalian'): ?>
+                                            <!-- ACC pengembalian -->
+                                            <a title="Validasi Pengembalian"
+                                                href="acc_peminjaman.php?id=<?= $row['id_peminjaman']; ?>&aksi=acc_pengembalian"
+                                                onclick="return confirm('Setujui pengembalian ini?')"
                                                 class="inline-flex items-center justify-center w-8 h-8 rounded bg-blue-500 hover:bg-blue-600 text-white transition">
                                                 <i data-lucide="user-lock" class="w-4 h-4"></i>
                                             </a>
                                         <?php endif; ?>
+
                                         <button title="Detail peminjaman" type="button"
                                             class="openDetail inline-flex items-center gap-1 w-8 h-8 bg-green-700 hover:bg-green-800 text-white px-2 py-1 rounded text-xs"
 
@@ -149,6 +161,7 @@ require_once '../../../includes/sidebar.php';
                                             data-kelas="<?= $row['kelas']; ?>"
                                             data-barang="<?= $row['nama_barang']; ?>"
                                             data-jumlah="<?= $row['jumlah']; ?>"
+                                            data-tanggal="<?= $formattedDate; ?>"
                                             data-pinjam="<?= $row['waktu_pinjam']; ?>"
                                             data-kembali="<?= $row['waktu_kembali']; ?>"
                                             data-status="<?= $row['status']; ?>"
@@ -188,42 +201,58 @@ require_once '../../../includes/sidebar.php';
                     <div class="grid grid-cols-2 gap-6">
                         <!-- Kolom Kiri -->
                         <div>
-                            <div class="bg-indigo-700 text-sm p-3 rounded-md mb-4">
-                                Data di bawah adalah detail data pengguna.
+                            <div class="bg-indigo-700 text-sm p-3 rounded-md mb-4 flex items-center gap-2">
+                                <i data-lucide="info"></i>
+                                <span>Data di bawah adalah detail data pengguna.</span>
                             </div>
                             <div class="space-y-3">
-                                <div>
-                                    <p class="text-sm text-gray-400">Nomor Identitas Pengguna</p>
-                                    <div id="detailNO" class="bg-gray-800 px-3 py-2 rounded-md"></div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <p class="text-sm text-gray-400">Nomor Identitas Pengguna</p>
+                                        <div id="detailNO" class="bg-gray-800 px-3 py-2 rounded-md"></div>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-400">Nama Pengguna</p>
+                                        <div id="detailNama" class="bg-gray-800 px-3 py-2 rounded-md"></div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <p class="text-sm text-gray-400">Jurusan</p>
+                                        <div id="detailJurusan" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-400">Kelas</p>
+                                        <div id="detailKelas" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-400">Nama Pengguna</p>
-                                    <div id="detailNama" class="bg-gray-800 px-3 py-2 rounded-md"></div>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-400">Jurusan</p>
-                                    <div id="detailJurusan" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-400">Kelas</p>
-                                    <div id="detailKelas" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
+                                    <p class="text-sm text-gray-400">Role</p>
+                                    <div id="detailRole" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Kolom Kanan -->
                         <div>
-                            <div class="bg-indigo-700 text-sm p-3 rounded-md mb-4">
-                                Data di bawah adalah detail data peminjaman.
+                            <div class="bg-indigo-700 text-sm p-3 rounded-md mb-4 flex items-center gap-2">
+                                <i data-lucide="info"></i>
+                                <span>Data di bawah adalah detail data peminjaman.</span>
                             </div>
                             <div class="space-y-3">
-                                <div>
-                                    <p class="text-sm text-gray-400">Nama Komoditas</p>
-                                    <div id="detailBarang" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <p class="text-sm text-gray-400">Nama Komoditas</p>
+                                        <div id="detailBarang" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-400">Jumlah</p>
+                                        <div id="detailJumlah" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-400">Jumlah</p>
-                                    <div id="detailJumlah" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
+                                    <p class="text-sm text-gray-400">Tanggal</p>
+                                    <div id="detailTanggal" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-3">
                                     <div>
@@ -239,14 +268,12 @@ require_once '../../../includes/sidebar.php';
                                     <p class="text-sm text-gray-400">Status</p>
                                     <div id="detailStatus" class="bg-gray-800 px-3 py-2 rounded-md"></div>
                                 </div>
+                                <div>
+                                    <p class="text-sm text-gray-400">Catatan</p>
+                                    <textarea id="detailCatatan" class="w-full bg-gray-800 text-white px-3 py-2 rounded-md" rows="4" disabled></textarea>
+                                </div>
                             </div>
                         </div>
-                    </div> <!-- Tutup grid di sini -->
-
-                    <!-- Catatan di luar grid -->
-                    <div class="mt-4">
-                        <p class="text-sm text-gray-400">Catatan</p>
-                        <textarea id="detailCatatan" class="w-full bg-gray-800 text-white px-3 py-2 rounded-md" rows="4" disabled></textarea>
                     </div>
 
                     <!-- Footer di luar grid -->
