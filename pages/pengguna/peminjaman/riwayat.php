@@ -8,15 +8,15 @@ if (!isset($_SESSION['login_pengguna'])) {
     exit;
 }
 
-$where = "";
+$id_pengguna = $_SESSION['id_pengguna'] ?? null;
+$nama_pengguna = $_SESSION['nama_pengguna'] ?? '';
+
+$where = "WHERE p.id_pengguna = $id_pengguna";
 if (!empty($_GET['tanggal_dari']) && !empty($_GET['tanggal_sampai'])) {
     $dari = $_GET['tanggal_dari'];
     $sampai = $_GET['tanggal_sampai'];
-    $where = "WHERE waktu_pinjam BETWEEN '$dari' AND '$sampai' AND id_pengguna = '$id_pengguna'";
+    $where = " AND waktu_pinjam BETWEEN '$dari' AND '$sampai'";
 }
-
-$id_pengguna = $_SESSION['id_pengguna'] ?? null;
-$nama_pengguna = $_SESSION['nama_pengguna'] ?? '';
 
 $riwayat = query(
     "SELECT 
@@ -209,7 +209,7 @@ require_once '../../../includes/sidebar.php';
                         else: ?>
                             <tr>
                                 <td colspan="11" class="py-4 px-5 text-center text-gray-500 dark:text-gray-400">
-                                    Tidak ada data peminjaman hari ini.
+                                    Tidak ada data riwayat peminjaman.
                                 </td>
                             </tr>
                         <?php endif; ?>
@@ -323,4 +323,4 @@ require_once '../../../includes/sidebar.php';
     </main>
 </div>
 
-<?php require_once '../../../includes/footer.php'; ?>   
+<?php require_once '../../../includes/footer.php'; ?>
