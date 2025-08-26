@@ -135,7 +135,7 @@ require_once '../../../includes/sidebar.php';
                                     <td class="px-4 py-3">
                                         <?php if ($row['status'] == 'menunggu'): ?>
                                             <!-- ACC peminjaman -->
-                                            <a title="Validasi Peminjaman"
+                                            <a title="Validasi Peminjaman Pengguna?"
                                                 href="acc_peminjaman.php?id=<?= $row['id_peminjaman']; ?>&aksi=acc"
                                                 onclick="return confirm('Setujui peminjaman ini?')"
                                                 class="inline-flex items-center justify-center w-8 h-8 rounded bg-blue-500 hover:bg-blue-600 text-white transition">
@@ -143,7 +143,7 @@ require_once '../../../includes/sidebar.php';
                                             </a>
                                         <?php elseif ($row['status'] == 'menunggu_pengembalian'): ?>
                                             <!-- ACC pengembalian -->
-                                            <a title="Validasi Pengembalian"
+                                            <a title="Validasi Pengembalian Pengguna?"
                                                 href="acc_peminjaman.php?id=<?= $row['id_peminjaman']; ?>&aksi=acc_pengembalian"
                                                 onclick="return confirm('Setujui pengembalian ini?')"
                                                 class="inline-flex items-center justify-center w-8 h-8 rounded bg-blue-500 hover:bg-blue-600 text-white transition">

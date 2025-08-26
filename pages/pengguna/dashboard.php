@@ -101,6 +101,7 @@ require_once '../../includes/sidebar.php';
                             foreach ($q_last as $row): ?>
                                 <tr class="border-t border-gray-700 hover:bg-gray-700">
                                     <td class="px-4 py-3"><?= $no++ ?></td>
+
                                     <!-- Tanggal -->
                                     <?php
                                     $datetime = $row['waktu_pinjam'];
@@ -127,6 +128,7 @@ require_once '../../includes/sidebar.php';
                                             <?= $row['waktu_pinjam']; ?>
                                         </span>
                                     </td>
+
                                     <!-- Waktu Kembali -->
                                     <td class="px-4 py-3 font-bold">
                                         <?php if (empty($row['waktu_kembali'])): ?>
@@ -141,11 +143,13 @@ require_once '../../includes/sidebar.php';
                                             </span>
                                         <?php endif; ?>
                                     </td>
+
                                     <!-- Komoditas -->
                                     <td class="px-4 py-3"><?= htmlspecialchars($row['nama_barang']); ?></td>
+
                                     <!-- Petugas -->
                                     <td class="px-4 py-3">
-                                        <?php if ($row['status'] == 'menunggu'): ?>
+                                        <?php if ($row['status'] == 'menunggu' || $row['status'] == 'menunggu_pengembalian'): ?>
                                             <button disabled title="Menunggu validasi petugas"
                                                 class="inline-flex items-center justify-center w-8 h-8 rounded bg-yellow-500 hover:bg-yellow-600 text-white transition">
                                                 <i data-lucide="alert-circle" class="w-4 h-4"></i>

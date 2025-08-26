@@ -1,6 +1,6 @@
 <?php
 require_once '../../../config/functions.php';
-$pageTitle = 'Peminjaman Barang';
+$pageTitle = 'Peminjaman Saya Hari Ini';
 
 // Pastikan user sudah login
 if (!isset($_SESSION['login_pengguna'])) {
@@ -35,186 +35,191 @@ require_once '../../../includes/sidebar.php';
 <div class="md:ml-64 min-h-screen bg-gray-900 text-white p-6 pt-16 md:pt-24">
     <main class="flex-1 md:p-6">
         <!-- Header -->
-        <div class="mb-6">
-            <h1 class="text-3xl font-bold text-white">Peminjaman Saya Hari Ini.</h1>
-            <p class="text-gray-400">Halaman Daftar Peminjaman Saya Hari Ini.</p>
-        </div>
-
-        <!-- Alert -->
-        <div class="bg-yellow-700 text-yellow-200 p-4 rounded-lg mb-6">
-            <p class="flex items-center gap-2">
-                <i data-lucide="message-square-warning"></i>
-                Data di bawah hanya akan tampil data peminjaman pada hari ini saja.
-                Jika ingin melihat riwayat data peminjaman yang sudah anda pinjam bisa pergi ke menu riwayat peminjaman pada daftar menu.
-            </p>
-            <p class="font-bold mt-2">
-                Diharapkan setiap peminjaman yang sudah selesai mohon lakukan pengubahan data pada tombol Pengembalian.
-            </p>
-        </div>
-
-        <!-- Tombol Aksi -->
-        <div class="flex items-center justify-between mb-4">
-            <div class="flex space-x-2">
-                <a href="../barang/daftar_barang.php" class="flex items-center gap-2 bg-green-600 hover:bg-green-500 px-4 py-2 rounded-lg text-sm font-semibold">
-                    <i data-lucide="package"></i>
-                    Daftar Komoditas Yang Tersedia
-                </a>
-                <button onclick="document.getElementById('modalPeminjaman').classList.remove('hidden')" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-lg text-sm font-semibold">
-                    <i data-lucide="plus"></i>
-                    Tambah Peminjaman
-                </button>
-            </div>
-
-            <!-- Search -->
+        <div class="flex justify-between items-center mb-6">
             <div>
-                <input
-                    type="text"
-                    id="search"
-                    placeholder="Cari..."
-                    class="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <h1 class="text-3xl font-bold"><?= $pageTitle; ?>.</h1>
+                <p class="text-gray-400 tracking-widest italic">~ Halaman Daftar <?= $pageTitle; ?>.</p>
             </div>
         </div>
 
-        <!-- Tabel -->
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left border-collapse">
-                <thead class="bg-gray-800 text-gray-300">
-                    <tr>
-                        <th class="px-4 py-3">#</th>
-                        <th class="px-4 py-3">Nama Pengguna</th>
-                        <th class="px-4 py-3">Komoditas</th>
-                        <th class="px-4 py-3">Tanggal</th>
-                        <th class="px-4 py-3">Waktu Pinjam</th>
-                        <th class="px-4 py-3">Waktu Kembali</th>
-                        <th class="px-4 py-3">Petugas</th>
-                        <th class="px-4 py-3">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-gray-900 divide-y divide-gray-700">
-                    <?php if (count($peminjamanHariIni) > 0): $no = 1; ?>
-                        <?php foreach ($peminjamanHariIni as $row): ?>
-                            <tr>
-                                <td class="px-4 py-3"><?= $no++; ?></td>
-                                <td class="px-4 py-3">
-                                    <span class="bg-indigo-700 text-white px-2 py-1 rounded">
-                                        <?= htmlspecialchars($row['nama_pengguna']); ?>
-                                    </span>
-                                </td>
-                                <!-- Nama Barang -->
-                                <td class="px-4 py-3"><?= htmlspecialchars($row['nama_barang']); ?></td>
+        <!-- Isi -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
+            <!-- Judul -->
+            <h1 class="text-2xl font-semibold mb-6"><?= $pageTitle; ?></h1>
+                
+            <!-- Alert -->
+            <div class="bg-yellow-700 text-yellow-200 p-4 rounded-lg mb-6">
+                <p class="flex items-center gap-2">
+                    <i data-lucide="message-square-warning"></i>
+                    Data di bawah hanya akan tampil data peminjaman pada hari ini saja.
+                    Jika ingin melihat riwayat data peminjaman yang sudah anda pinjam bisa pergi ke menu riwayat peminjaman pada daftar menu.
+                </p>
+                <p class="font-bold mt-2">
+                    Diharapkan setiap peminjaman yang sudah selesai mohon lakukan pengubahan data pada tombol Pengembalian.
+                </p>
+            </div>
 
-                                <!-- format tanggal -->
-                                <?php
-                                $datetime = $row['waktu_pinjam'];
+            <!-- Tombol Aksi -->
+            <div class="flex items-center justify-between pt-4 mb-4">
+                <div class="flex space-x-2">
+                    <a href="../barang/daftar_barang.php" class="flex items-center gap-2 bg-green-600 hover:bg-green-500 px-4 py-2 rounded-lg text-sm font-semibold">
+                        <i data-lucide="package"></i>
+                        Daftar Komoditas Yang Tersedia
+                    </a>
+                    <button onclick="document.getElementById('modalPeminjaman').classList.remove('hidden')" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-lg text-sm font-semibold">
+                        <i data-lucide="plus"></i>
+                        Tambah Peminjaman
+                    </button>
+                </div>
 
-                                // format tanggal 
-                                $date = new DateTime($datetime);
-                                $days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-                                $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                <!-- Search -->
+                <div>
+                    <input
+                        type="text"
+                        id="search"
+                        placeholder="Cari..."
+                        class="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+            </div>
 
-                                $dayName = $days[(int)$date->format('w')];
-                                $day = $date->format('d');
-                                $monthName = $months[(int)$date->format('m') - 1];
-                                $year = $date->format('Y');
-
-                                $formattedDate = "$dayName, $day $monthName $year";
-                                ?>
-
-                                <!-- Tanggal -->
-                                <td class="px-4 py-3"><?= $formattedDate; ?></td>
-
-                                <!-- Waktu Pinjam -->
-                                <td class="px-4 py-3 font-bold">
-                                    <span class="inline-flex items-center gap-1 bg-gray-700 px-2 py-1 rounded">
-                                        <i data-lucide="clock" class="w-4 h-4"></i>
-                                        <?= $row['waktu_pinjam']; ?>
-                                    </span>
-                                </td>
-
-                                <!-- Waktu Kembali -->
-                                <td class="px-4 py-3 font-bold">
-                                    <?php if (empty($row['waktu_kembali'])): ?>
-                                        <span class="inline-flex items-center gap-1 bg-yellow-700 px-2 py-1 rounded">
-                                            <i data-lucide="loader" class="w-4 h-4 animate-spin"></i>
-                                            <span>Masih berlangsung</span>
+            <!-- Tabel -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-gray-800 text-sm text-white table-auto border-collapse">
+                    <thead>
+                        <tr class="bg-gray-700 text-left">
+                            <th class="px-4 py-3">#</th>
+                            <th class="px-4 py-3">Nama Pengguna</th>
+                            <th class="px-4 py-3">Komoditas</th>
+                            <th class="px-4 py-3">Tanggal</th>
+                            <th class="px-4 py-3">Waktu Pinjam</th>
+                            <th class="px-4 py-3">Waktu Kembali</th>
+                            <th class="px-4 py-3">Petugas</th>
+                            <th class="px-4 py-3">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (count($peminjamanHariIni) > 0): $no = 1; ?>
+                            <?php foreach ($peminjamanHariIni as $row): ?>
+                                <tr class="border-t border-gray-700 hover:bg-gray-700">
+                                    <td class="px-4 py-3"><?= $no++; ?></td>
+                                    <td class="px-4 py-3">
+                                        <span class="bg-indigo-700 text-white px-2 py-1 rounded">
+                                            <?= htmlspecialchars($row['nama_pengguna']); ?>
                                         </span>
-                                    <?php else: ?>
+                                    </td>
+                                    <!-- Nama Barang -->
+                                    <td class="px-4 py-3"><?= htmlspecialchars($row['nama_barang']); ?></td>
+
+                                    <!-- format tanggal -->
+                                    <?php
+                                    $datetime = $row['waktu_pinjam'];
+
+                                    // format tanggal 
+                                    $date = new DateTime($datetime);
+                                    $days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                                    $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+                                    $dayName = $days[(int)$date->format('w')];
+                                    $day = $date->format('d');
+                                    $monthName = $months[(int)$date->format('m') - 1];
+                                    $year = $date->format('Y');
+
+                                    $formattedDate = "$dayName, $day $monthName $year";
+                                    ?>
+
+                                    <!-- Tanggal -->
+                                    <td class="px-4 py-3"><?= $formattedDate; ?></td>
+
+                                    <!-- Waktu Pinjam -->
+                                    <td class="px-4 py-3 font-bold">
                                         <span class="inline-flex items-center gap-1 bg-gray-700 px-2 py-1 rounded">
                                             <i data-lucide="clock" class="w-4 h-4"></i>
-                                            <?= $row['waktu_kembali']; ?>
+                                            <?= $row['waktu_pinjam']; ?>
                                         </span>
-                                    <?php endif; ?>
-                                </td>
+                                    </td>
 
-                                <!-- Petugas -->
-                                <td class="px-4 py-3">
-                                    <?php if ($row['status'] == 'menunggu' || $row['status'] == 'menunggu_pengembalian'): ?>
-                                        <button disabled title="Menunggu validasi petugas"
-                                            class="inline-flex items-center justify-center w-8 h-8 rounded bg-yellow-500 hover:bg-yellow-600 text-white transition">
-                                            <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                                    <!-- Waktu Kembali -->
+                                    <td class="px-4 py-3 font-bold">
+                                        <?php if (empty($row['waktu_kembali'])): ?>
+                                            <span class="inline-flex items-center gap-1 bg-yellow-700 px-2 py-1 rounded">
+                                                <i data-lucide="loader" class="w-4 h-4 animate-spin"></i>
+                                                <span>Masih berlangsung</span>
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="inline-flex items-center gap-1 bg-gray-700 px-2 py-1 rounded">
+                                                <i data-lucide="clock" class="w-4 h-4"></i>
+                                                <?= $row['waktu_kembali']; ?>
+                                            </span>
+                                        <?php endif; ?>
+                                    </td>
+
+                                    <!-- Petugas -->
+                                    <td class="px-4 py-3">
+                                        <?php if ($row['status'] == 'menunggu' || $row['status'] == 'menunggu_pengembalian'): ?>
+                                            <button disabled title="Menunggu validasi petugas"
+                                                class="inline-flex items-center justify-center w-8 h-8 rounded bg-yellow-500 hover:bg-yellow-600 text-white transition">
+                                                <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                                            </button>
+                                        <?php elseif ($row['status'] == 'dipinjam' || $row['status'] == 'dikembalikan'): ?>
+                                            <button disabled title="Sudah divalidasi oleh petugas"
+                                                class="inline-flex items-center justify-center w-8 h-8 rounded bg-green-700 text-white">
+                                                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                            </button>
+                                        <?php endif; ?>
+                                    </td>
+
+                                    <!-- Aksi -->
+                                    <td class="px-4 py-3 flex items-center gap-2">
+
+                                        <button title="Detail peminjaman" type="button"
+                                            class="openDetail cursor-pointer inline-flex items-center justify-center w-8 h-8 rounded bg-green-700 hover:bg-green-800 text-white transition"
+                                            data-nip="<?= $row['nip_nis']; ?>"
+                                            data-nama="<?= $row['nama_pengguna']; ?>"
+                                            data-role="<?= $row['role'] ?>"
+                                            data-jurusan="<?= $row['jurusan']; ?>"
+                                            data-kelas="<?= $row['kelas']; ?>"
+                                            data-barang="<?= $row['nama_barang']; ?>"
+                                            data-jumlah="<?= $row['jumlah']; ?>"
+                                            data-tanggal="<?= $formattedDate; ?>"
+                                            data-pinjam="<?= $row['waktu_pinjam']; ?>"
+                                            data-kembali="<?= $row['waktu_kembali']; ?>"
+                                            data-status="<?= $row['status']; ?>"
+                                            data-catatan="<?= $row['catatan']; ?>">
+                                            <i data-lucide="eye" class="w-4 h-4"></i>
                                         </button>
-                                    <?php elseif ($row['status'] == 'dipinjam' || $row['status'] == 'dikembalikan'): ?>
-                                        <button disabled title="Sudah divalidasi oleh petugas"
-                                            class="inline-flex items-center justify-center w-8 h-8 rounded bg-green-700 text-white">
-                                            <i data-lucide="check-circle" class="w-4 h-4"></i>
-                                        </button>
-                                    <?php endif; ?>
+
+                                        <?php if ($row['status'] == 'dipinjam'): ?>
+                                            <a title="Ajukan Pengembalian"
+                                                href="ajukan_pengembalian.php?id=<?= $row['id_peminjaman']; ?>&aksi=ajukan"
+                                                onclick="return confirm('Ajukan pengembalian untuk peminjaman ini?')"
+                                                class="inline-flex items-center justify-center w-8 h-8 rounded bg-yellow-500 hover:bg-yellow-600 text-white transition">
+                                                <i data-lucide="check" class="w-4 h-4 bg-black rounded-full"></i>
+                                            </a>
+                                        <?php endif; ?>
+
+                                        <?php if ($row['status'] == 'menunggu' || $row['status'] == 'dipinjam'): ?>
+                                            <button
+                                                type="button"
+                                                title="Edit Peminjaman"
+                                                class="inline-flex items-center justify-center w-8 h-8 rounded bg-green-700 hover:bg-green-800 text-white transition"
+                                                data-row='<?= json_encode($row, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>'
+                                                onclick="openEditPeminjamanModal(this)">
+                                                <i data-lucide="pencil" class="w-4 h-4"></i>
+                                            </button>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach;
+                        else: ?>
+                            <tr>
+                                <td colspan="11" class="py-4 px-5 text-center text-gray-500 dark:text-gray-400">
+                                    Tidak ada data peminjaman hari ini.
                                 </td>
-
-                                <!-- Aksi -->
-                                <td class="px-4 py-3 flex items-center gap-2">
-                                    <!-- Tombol Detail Peminjaman (mata hijau kiri) -->
-                                    <button title="Detail peminjaman" type="button"
-                                        class="openDetail cursor-pointer inline-flex items-center justify-center w-8 h-8 rounded bg-green-700 hover:bg-green-800 text-white transition"
-                                        data-nip="<?= $row['nip_nis']; ?>"
-                                        data-nama="<?= $row['nama_pengguna']; ?>"
-                                        data-role="<?= $row['role'] ?>"
-                                        data-jurusan="<?= $row['jurusan']; ?>"
-                                        data-kelas="<?= $row['kelas']; ?>"
-                                        data-barang="<?= $row['nama_barang']; ?>"
-                                        data-jumlah="<?= $row['jumlah']; ?>"
-                                        data-tanggal="<?= $formattedDate; ?>"
-                                        data-pinjam="<?= $row['waktu_pinjam']; ?>"
-                                        data-kembali="<?= $row['waktu_kembali']; ?>"
-                                        data-status="<?= $row['status']; ?>"
-                                        data-catatan="<?= $row['catatan']; ?>">
-                                        <i data-lucide="eye" class="w-4 h-4"></i>
-                                    </button>
-
-                                    <!-- Tombol Ajukan Pengembalian (centang kuning tengah) -->
-                                    <?php if ($row['status'] == 'dipinjam'): ?>
-                                        <a title="Ajukan Pengembalian"
-                                            href="ajukan_pengembalian.php?id=<?= $row['id_peminjaman']; ?>&aksi=ajukan"
-                                            onclick="return confirm('Ajukan pengembalian untuk peminjaman ini?')"
-                                            class="inline-flex items-center justify-center w-8 h-8 rounded bg-yellow-500 hover:bg-yellow-600 text-white transition">
-                                            <i data-lucide="check" class="w-4 h-4 bg-black rounded-full"></i>
-                                        </a>
-                                    <?php endif; ?>
-
-                                    <!-- Tombol Edit Peminjaman (pensil hijau kanan) -->
-                                    <?php if ($row['status'] == 'menunggu' || $row['status'] == 'dipinjam'): ?>
-                                        <button
-                                            type="button"
-                                            title="Edit Peminjaman"
-                                            class="inline-flex items-center justify-center w-8 h-8 rounded bg-green-700 hover:bg-green-800 text-white transition"
-                                            data-row='<?= json_encode($row, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>'
-                                            onclick="openEditPeminjamanModal(this)">
-                                            <i data-lucide="pencil" class="w-4 h-4"></i>
-                                        </button>
-                                    <?php endif; ?>
-                                </td>
-
                             </tr>
-                        <?php endforeach;
-                    else: ?>
-                        <tr>
-                            <td colspan="11" class="py-4 px-5 text-center text-gray-500 dark:text-gray-400">
-                                Tidak ada data peminjaman hari ini.
-                            </td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Modal Peminjaman -->

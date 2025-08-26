@@ -161,7 +161,7 @@ require_once '../../../includes/sidebar.php';
 
                                         <!-- Petugas -->
                                         <td class="px-4 py-3">
-                                            <?php if ($row['status'] == 'menunggu'): ?>
+                                            <?php if ($row['status'] == 'menunggu' || $row['status'] == 'menunggu_pengembalian'): ?>
                                                 <button disabled title="Menunggu validasi petugas"
                                                     class="inline-flex items-center justify-center w-8 h-8 rounded bg-yellow-500 hover:bg-yellow-600 text-white transition">
                                                     <i data-lucide="alert-circle" class="w-4 h-4"></i>
@@ -177,11 +177,23 @@ require_once '../../../includes/sidebar.php';
                                         <!-- Aksi -->
                                         <td class="px-4 py-3">
                                             <?php if ($row['status'] == 'menunggu'): ?>
-                                                <a title="Validasi?" href="acc_peminjaman.php?id=<?= $row['id_peminjaman']; ?>&aksi=acc" onclick="return confirm('Setujui peminjaman ini?')"
+                                                <!-- ACC Peminjaman -->
+                                                <a title="Validasi Peminjaman Pengguna?"
+                                                    href="acc_peminjaman.php?id=<?= $row['id_peminjaman']; ?>&aksi=acc"
+                                                    onclick="return confirm('Setujui peminjaman ini?')"
+                                                    class="inline-flex items-center justify-center w-8 h-8 rounded bg-blue-500 hover:bg-blue-600 text-white transition">
+                                                    <i data-lucide="user-lock" class="w-4 h-4"></i>
+                                                </a>
+                                            <?php elseif ($row['status'] == 'menunggu_pengembalian'): ?>
+                                                <!-- ACC Pengembalian -->
+                                                <a title="Validasi Pengembalian Pengguna?"
+                                                    href="acc_peminjaman.php?id=<?= $row['id_peminjaman']; ?>&aksi=acc_pengembalian"
+                                                    onclick="return confirm('Setujui pengembalian ini?')"
                                                     class="inline-flex items-center justify-center w-8 h-8 rounded bg-blue-500 hover:bg-blue-600 text-white transition">
                                                     <i data-lucide="user-lock" class="w-4 h-4"></i>
                                                 </a>
                                             <?php endif; ?>
+                                            
                                             <button title="Detail peminjaman" type="button"
                                                 class="openDetail inline-flex items-center gap-1 w-8 h-8 bg-green-700 hover:bg-green-800 text-white px-2 py-1 rounded text-xs"
 
