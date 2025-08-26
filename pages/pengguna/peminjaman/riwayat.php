@@ -218,6 +218,56 @@ require_once '../../../includes/sidebar.php';
             </div>
         </div>
 
+        <!-- Modal Edit Peminjaman -->
+        <div id="modalEditPeminjaman" class="fixed inset-0 z-50 hidden" style="background: rgba(0,0,0,0.5);">
+            <div class="flex items-center justify-center min-h-screen" id="modalEditPeminjamanBg">
+                <div class="bg-gray-800 bg-opacity-90 rounded-xl shadow-lg p-8 w-full max-w-md relative" onclick="event.stopPropagation();">
+                    <button onclick="document.getElementById('modalEditPeminjaman').classList.add('hidden')" class="absolute top-2 right-2 text-gray-400 hover:text-white">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                    <h2 class="text-xl font-bold mb-4 text-white underline">Edit Peminjaman Barang</h2>
+                    <?php if (isset($error)): ?>
+                        <div class="bg-red-600 text-white p-3 rounded mb-4">
+                            <?= htmlspecialchars($error) ?>
+                        </div>
+                    <?php endif; ?>
+                    <form action="proses_edit_peminjaman.php" method="POST" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                        <input type="hidden" name="id_peminjaman" id="edit_id_peminjaman">
+                        <div class="mb-4">
+                            <label for="waktu_pinjam" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Waktu Pinjam</label>
+                            <input type="datetime-local" name="waktu_pinjam" id="edit_waktu_pinjam" required
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
+                        </div>
+                        <div class="mb-4">
+                            <label for="id_barang" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Barang</label>
+                            <select name="id_barang" id="edit_id_barang" required
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
+                                <option value="">-- Pilih Barang --</option>
+                                <?php foreach ($daftar_barang as $barang): ?>
+                                    <option value="<?= $barang['id_barang'] ?>" <?= ($id_barang_selected == $barang['id_barang']) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($barang['nama_barang']) ?> (Stok: <?= $barang['jumlah_tersedia'] ?>)
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="jumlah" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Jumlah</label>
+                            <input type="number" name="jumlah" id="edit_jumlah" min="1" required
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
+                        </div>
+                        <div class="mb-4">
+                            <label for="catatan" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Catatan (Opsiona)</label>
+                            <textarea name="catatan" id="edit_catatan" rows="3"
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
+                            </textarea>
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">Edit Peminjaman</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <!-- Modal Overlay -->
         <div id="detailModal" class="fixed inset-0 items-center justify-center z-50 hidden" style="background: rgba(0,0,0,0.5);">
             <div class="flex items-center justify-center min-h-screen" id="detailModalBg">
