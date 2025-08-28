@@ -69,6 +69,8 @@ require_once '../../../includes/sidebar.php';
             <div>
                 <label class="block mb-1 font-medium">Image</label>
                 <input type="file" name="image" id="image" accept="image/*" class="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" onchange="previewFile(this)">
+                <!-- Nama File -->
+                <span id="nama-file" class="text-sm text-gray-600 mt-2">Belum ada file yang dipilih</span>
             </div>
 
             <div>
@@ -91,13 +93,25 @@ require_once '../../../includes/sidebar.php';
 <script>
     function previewFile(input) {
         const file = input.files[0];
+        const fileName = file ? file.name : 'Belum ada file yang dipilih';
+        document.getElementById('nama-file').textContent = fileName;
+
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                const img = document.createElement('img');
+                // cari apakah sudah ada img preview di parent
+                let oldPreview = input.parentNode.querySelector("img.preview");
+                if (oldPreview) {
+                    oldPreview.remove(); // hapus yang lama
+                }
+
+                // buat img baru
+                const img = document.createElement("img");
                 img.src = e.target.result;
-                img.style.maxWidth = '200px';
-                img.style.marginTop = '10px';
+                img.classList.add("preview"); // kasih class biar mudah dicari
+                img.style.maxWidth = "200px";
+                img.style.marginTop = "10px";
+
                 input.parentNode.appendChild(img);
             };
             reader.readAsDataURL(file);
