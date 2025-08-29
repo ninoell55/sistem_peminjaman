@@ -15,7 +15,7 @@ if (isset($_GET['id'])) {
         echo '<script>alert("Admin berhasil dihapus!");window.location.href="read.php";</script>';
         exit;
     } else {
-        echo '<script>alert("Gagal hapus admin: ' . htmlspecialchars($stmt->error) . '");history.back();</script>';
+        echo '<script>alert("Tidak boleh menghapus data admin/petugas yang sudah melakukan perizinan akses di sistem ini.");history.back();</script>';
     }
     $stmt->close();
 } else {
