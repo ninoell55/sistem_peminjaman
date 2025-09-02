@@ -195,3 +195,21 @@ require_once '../../includes/sidebar.php';
 </script>
 
 <?php require_once '../../includes/footer.php'; ?>
+
+<?php if (isset($_SESSION['login_success']) && $_SESSION['login_success']) : ?>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Login Berhasil!',
+            text: 'Selamat datang di dashboard admin dan petugas.',
+            timer: 2000,
+            showConfirmButton: false,
+            timerProgressBar: true,
+            background: "#1f2937",
+            color: "#f9fafb"
+        }).then(() => {
+            window.history.replaceState(null, null, window.location.pathname);
+        });
+    </script>
+    <?php unset($_SESSION['login_success']); ?>
+<?php endif; ?>

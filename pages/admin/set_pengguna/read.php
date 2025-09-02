@@ -1,6 +1,6 @@
 <?php
 require_once '../../../config/functions.php';
-$pageTitle = 'Data Pengguna';
+$pageTitle = 'Data Pengguna (Siswa, Guru, Staff)';
 
 if (!isset($_SESSION['login_admin'])) {
     header("Location: ../../../auth/login_admin/login.php"); // redirect ke halaman awal login
@@ -24,68 +24,80 @@ require_once '../../../includes/sidebar.php';
     <main class="p-6">
         <div class="flex justify-between items-center mb-6">
             <div>
-                <h1 class="text-3xl font-bold"><?= $pageTitle; ?></h1>
-                <p class="text-gray-400">Berikut adalah daftar seluruh pengguna yang tersedia.</p>
+                <h1 class="text-3xl font-bold"><?= $pageTitle; ?>.</h1>
+                <p class="text-gray-400 tracking-widest italic">~ Halaman Daftar <?= $pageTitle; ?> SMKN 1 CIREBON.</p>
             </div>
-
-            <button onclick="document.getElementById('modalPengguna').classList.remove('hidden')" type="button" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-full text-sm font-semibold text-white shadow">
-                <i data-lucide="plus" class="w-5 h-5"></i>
-            </button>
-
         </div>
 
-        <div class="overflow-x-auto rounded-2xl shadow">
-            <table class="min-w-full bg-gray-800 text-sm text-white table-auto border-collapse">
-                <thead>
-                    <tr class="bg-gray-700 text-left">
-                        <th class="px-4 py-3">#</th>
-                        <th class="px-4 py-3">Nama Pengguna</th>
-                        <th class="px-4 py-3">Username</th>
-                        <th class="px-4 py-3">Password</th>
-                        <th class="px-4 py-3">Role</th>
-                        <th class="px-4 py-3">Kelas</th>
-                        <th class="px-4 py-3">Jurusan</th>
-                        <th class="px-4 py-3">Nomor Identitas</th>
-                        <th class="px-4 py-3">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php $no = 1;
-                    foreach ($pengguna as $row): ?>
-                        <tr class="border-t border-gray-700 hover:bg-gray-700">
-                            <td class="px-4 py-3"><?= $no++ ?></td>
-                            <td class="px-4 py-3"><?= htmlspecialchars($row['nama_pengguna']) ?></td>
-                            <td class="px-4 py-3"><?= htmlspecialchars($row['username']) ?></td>
-                            <td class="px-4 py-3"><?= htmlspecialchars($row['password']) ?></td>
-                            <td class="px-4 py-3"><?= htmlspecialchars($row['role']) ?></td>
-                            <td class="px-4 py-3">
-                                <?php if (strtolower($row['role']) === 'siswa'): ?>
-                                    <?= htmlspecialchars($row['kelas']) ?>
-                                <?php else: ?>
-                                    <span class="text-gray-400">-</span>
-                                <?php endif; ?>
-                            </td>
-                            <td class="px-4 py-3">
-                                <?php if (strtolower($row['role']) === 'siswa'): ?>
-                                    <?= htmlspecialchars($row['jurusan']) ?>
-                                <?php else: ?>
-                                    <span class="text-gray-400">-</span>
-                                <?php endif; ?>
-                            </td>
-                            <td class="px-4 py-3"><?= htmlspecialchars($row['nip_nis']) ?></td>
-                            <td class="px-4 py-3 flex gap-2">
-                                <button type="button" class="text-yellow-400 hover:underline text-sm flex items-center" onclick='openEditPenggunaModal(<?= json_encode($row, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>)'>
-                                    <i data-lucide="rotate-ccw-square" class="w-4 h-4 mr-1"></i>Edit
-                                </button>
-                                <a href="delete.php?id=<?= $row['id_pengguna'] ?>" class="text-red-400 hover:underline text-sm flex items-center"
-                                    onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?');">
-                                    <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i>Hapus
-                                </a>
-                            </td>
+        <?php showSuccessAlert(); ?>
+
+        <div class="w-full max-w-full bg-gray-800 shadow-lg rounded-xl p-6">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <p class="text-gray-400 italic font-bold">Berikut adalah daftar seluruh data pengguna (peminjam) di SMKN 1 CIREBON yang tersedia.</p>
+                    <h1 class="text-2xl font-bold">---</h1>
+                </div>
+
+                <button onclick="document.getElementById('modalPengguna').classList.remove('hidden')" type="button" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-full text-sm font-semibold text-white shadow">
+                    <i data-lucide="plus" class="w-5 h-5"></i>
+                </button>
+
+            </div>
+
+            <div class="rounded-2xl">
+                <table id="dataTables" class="overflow-x-auto min-w-full bg-gray-800 text-sm text-white table-auto border-collapse display responsive nowrap">
+                    <thead>
+                        <tr class="text-left bg-gray-700 hover:bg-gray-600">
+                            <th class="px-4 py-3">#</th>
+                            <th class="px-4 py-3">Nama Pengguna</th>
+                            <th class="px-4 py-3">Username</th>
+                            <th class="px-4 py-3">Password</th>
+                            <th class="px-4 py-3">Role</th>
+                            <th class="px-4 py-3">Kelas</th>
+                            <th class="px-4 py-3">Jurusan</th>
+                            <th class="px-4 py-3">Nomor Identitas</th>
+                            <th class="px-4 py-3">Aksi</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php if (count($pengguna) > 0): $no = 1; ?>
+                            <?php foreach ($pengguna as $row): ?>
+                                <tr class="border-t border-gray-700 hover:bg-gray-700">
+                                    <td class="px-4 py-3"><?= $no++ ?></td>
+                                    <td class="px-4 py-3"><?= htmlspecialchars($row['nama_pengguna']) ?></td>
+                                    <td class="px-4 py-3"><?= htmlspecialchars($row['username']) ?></td>
+                                    <td class="px-4 py-3"><?= htmlspecialchars($row['password']) ?></td>
+                                    <td class="px-4 py-3"><?= htmlspecialchars($row['role']) ?></td>
+                                    <td class="px-4 py-3">
+                                        <?php if (strtolower($row['role']) === 'siswa'): ?>
+                                            <?= htmlspecialchars($row['kelas']) ?>
+                                        <?php else: ?>
+                                            <span class="text-gray-400">-</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <?php if (strtolower($row['role']) === 'siswa'): ?>
+                                            <?= htmlspecialchars($row['jurusan']) ?>
+                                        <?php else: ?>
+                                            <span class="text-gray-400">-</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="px-4 py-3"><?= htmlspecialchars($row['nip_nis']) ?></td>
+                                    <td class="px-4 py-3 flex gap-2">
+                                        <button type="button" class="text-yellow-400 hover:underline text-sm flex items-center" onclick='openEditPenggunaModal(<?= json_encode($row, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>)'>
+                                            <i data-lucide="rotate-ccw-square" class="w-4 h-4 mr-1"></i>Edit
+                                        </button>
+                                        <a href="delete.php?id=<?= $row['id_pengguna'] ?>" class="btn-hapus text-red-400 hover:underline text-sm flex items-center">
+                                            <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i>Hapus
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach;
+                        else: ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </main>
     <!-- Modal Edit Pengguna -->
@@ -97,7 +109,7 @@ require_once '../../../includes/sidebar.php';
                 </button>
                 <h2 class="text-xl font-bold mb-4 text-white underline">Edit Pengguna</h2>
                 <form action="proses_update.php" method="POST" class="space-y-4">
-                    <input type="hidden" name="id_penggunarequire_once" id="edit_id_pengguna">
+                    <input type="hidden" name="id_pengguna" id="edit_id_pengguna">
                     <div>
                         <label class="block mb-1 font-medium">Nama Pengguna</label>
                         <input type="text" name="nama_pengguna" id="edit_nama_pengguna" required class="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -193,6 +205,6 @@ require_once '../../../includes/sidebar.php';
             </div>
         </div>
     </div>
-</div>      
+</div>
 
 <?php require_once '../../../includes/footer.php'; ?>

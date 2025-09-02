@@ -20,9 +20,15 @@ if (isset($_POST['tambahKomoditas'])) {
 
     // Validate inputs
     if (empty($nama_barang) || empty($id_kategori) || empty($jumlah_total) || empty($jumlah_tersedia) || empty($lokasi) || empty($kondisi)) {
-        echo "Semua field harus diisi!";
+        header("Location: read.php?success=error");
         exit;
     }
+
+    // Pastikan jumlah_total dan jumlah_tersedia adalah integer dan tidak kurang dari 0
+    if ($jumlah_total < 0 || $jumlah_tersedia < 0) {
+        header("Location: read.php?success=error");
+        exit;
+    }   
 
     // Cek duplikasi barang
     $stmt_cek = $connection->prepare("SELECT COUNT(*) FROM barang WHERE nama_barang = ?");
@@ -32,7 +38,7 @@ if (isset($_POST['tambahKomoditas'])) {
     $stmt_cek->fetch();
     $stmt_cek->close();
     if ($total > 0) {
-        echo '<script>alert("Nama Barang sudah tersedia, silahkan melakukan perubahan saja!");history.back();</script>';
+        header("Location: read.php?success=twin");
         exit;
     } else {
         $image = '';
@@ -45,7 +51,7 @@ if (isset($_POST['tambahKomoditas'])) {
             if (in_array($_FILES['image']['type'], $allowed_types)) {
                 move_uploaded_file($_FILES['image']['tmp_name'], $target_files);
             } else {
-                echo "Tipe file gambar tidak valid!";
+                header("Location: read.php?success=error");
                 exit;
             }
         }
@@ -56,10 +62,11 @@ if (isset($_POST['tambahKomoditas'])) {
 
         // Execute the statement and check for success
         if ($stmt->execute()) {
-            header("Location: read.php?success=1");
+            header("Location: read.php?success=tambah");
             exit;
         } else {
-            echo "Error: " . $stmt->error;
+            header("Location: read.php?success=error");
+            exit;
         }
 
         // Close the statement

@@ -13,6 +13,14 @@
     <script src="<?= $base_url ?>assets/js/lucide.min.js"></script>
     <!-- Chart -->
     <script src="<?= $base_url ?>assets/js/chart.js"></script>
+
+    <!-- Datatables -->
+    <link rel="stylesheet" href="<?= $base_url ?>assets/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="<?= $base_url ?>assets/css/dataTables.tailwindcss.css" />
+    <link rel="stylesheet" href="<?= $base_url ?>assets/css/responsive.dataTables.min.css" />
+
+    <!-- Sweet-Alert -->
+    <link rel="stylesheet" href="<?= $base_url ?>assets/css/sweetalert2.min.css">
 </head>
 
 <body class="bg-gray-900 text-white">
@@ -25,9 +33,9 @@
                     <i class="w-5 h-5" data-lucide="menu"></i>
                 </button>
                 <?php if (isset($_SESSION['login_admin'])): ?>
-                    <a href="<?= $base_url; ?>pages/admin/dashboard.php" class="text-sm md:text-xl font-semibold">SMKN 1 KOTA CIREBON</a>
+                    <a href="<?= $base_url; ?>pages/admin/dashboard.php" class="text-sm md:text-xl font-semibold">SMK NEGERI 1 CIREBON</a>
                 <?php elseif (isset($_SESSION['login_pengguna'])): ?>
-                    <a href="<?= $base_url; ?>pages/pengguna/dashboard.php" class="text-sm md:text-xl font-semibold">SMKN 1 KOTA CIREBON</a>
+                    <a href="<?= $base_url; ?>pages/pengguna/dashboard.php" class="text-sm md:text-xl font-semibold">SMK NEGERI 1 CIREBON</a>
                 <?php else: ?>
                     <a href="<?= $base_url; ?>" class="text-sm md:text-xl font-semibold">Sistem Peminjaman Sekolah</a>
                 <?php endif; ?>

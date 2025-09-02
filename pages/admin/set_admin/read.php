@@ -1,6 +1,6 @@
 <?php
 require_once '../../../config/functions.php';
-$pageTitle = 'Data Administrator';
+$pageTitle = 'Data Admin & Petugas';
 
 if (!isset($_SESSION['login_admin'])) {
     header("Location: ../../../auth/login_admin/login.php");
@@ -23,50 +23,61 @@ require_once '../../../includes/sidebar.php';
     <main class="p-6">
         <div class="flex justify-between items-center mb-6">
             <div>
-                <h1 class="text-3xl font-bold"><?= $pageTitle; ?></h1>
-                <p class="text-gray-400">Berikut adalah daftar seluruh admin yang tersedia.</p>
+                <h1 class="text-3xl font-bold"><?= $pageTitle; ?>.</h1>
+                <p class="text-gray-400 tracking-widest italic">~ Halaman Daftar <?= $pageTitle; ?>.</p>
             </div>
-
-            <button onclick="document.getElementById('modalAdmin').classList.remove('hidden')" type="button" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-full text-sm font-semibold text-white shadow">
-                <i data-lucide="plus" class="w-5 h-5"></i>
-            </button>
-
         </div>
 
-        <div class="overflow-x-auto rounded-2xl shadow">
-            <table id="dataTable" class="min-w-full bg-gray-800 text-sm text-white table-auto border-collapse">
-                <thead>
-                    <tr class="bg-gray-700 text-left">
-                        <th class="px-4 py-3">#</th>
-                        <th class="px-4 py-3">Nama Admin</th>
-                        <th class="px-4 py-3">Username</th>
-                        <th class="px-4 py-3">Password</th>
-                        <th class="px-4 py-3">Role</th>
-                        <th class="px-4 py-3">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php $no = 1;
-                    foreach ($admin as $row): ?>
-                        <tr class="border-t border-gray-700 hover:bg-gray-700">
-                            <td class="px-4 py-3"><?= $no++ ?></td>
-                            <td class="px-4 py-3"><?= htmlspecialchars($row['nama_admin']) ?></td>
-                            <td class="px-4 py-3"><?= htmlspecialchars($row['username']) ?></td>
-                            <td class="px-4 py-3"><?= htmlspecialchars($row['password']) ?></td>
-                            <td class="px-4 py-3"><?= htmlspecialchars($row['role']) ?></td>
-                            <td class="px-4 py-3 flex gap-2">
-                                <button type="button" class="text-yellow-400 hover:underline text-sm flex items-center" onclick='openEditAdminModal(<?= json_encode($row, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>)'>
-                                    <i data-lucide="rotate-ccw-square" class="w-4 h-4 mr-1"></i>Edit
-                                </button>
-                                <a href="delete.php?id=<?= $row['id_admin'] ?>" class="text-red-400 hover:underline text-sm flex items-center"
-                                    onclick="return confirm('Apakah Anda yakin ingin menghapus admin ini?');">
-                                    <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i>Hapus
-                                </a>
-                            </td>
+        <?php showSuccessAlert(); ?>
+
+        <div class="w-full max-w-full bg-gray-800 shadow-lg rounded-xl p-6">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <p class="text-gray-400 italic font-bold">Berikut adalah daftar seluruh pengelola sistem peminjaman yang tersedia.</p>
+                    <h1 class="text-2xl font-bold">---</h1>
+                </div>
+
+                <button onclick="document.getElementById('modalAdmin').classList.remove('hidden')" type="button" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-full text-sm font-semibold text-white shadow">
+                    <i data-lucide="plus" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="rounded-2xl">
+                <table id="dataTables" class="overflow-x-auto min-w-full bg-gray-800 text-sm text-white table-auto border-collapse display responsive nowrap">
+                    <thead>
+                        <tr class="text-left bg-gray-700 hover:bg-gray-600">
+                            <th class="px-4 py-3">#</th>
+                            <th class="px-4 py-3">Nama Admin</th>
+                            <th class="px-4 py-3">Username</th>
+                            <th class="px-4 py-3">Password</th>
+                            <th class="px-4 py-3">Role</th>
+                            <th class="px-4 py-3">Aksi</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php if (count($admin) > 0): $no = 1; ?>
+                            <?php foreach ($admin as $row): ?>
+                                <tr class="border-t border-gray-700 hover:bg-gray-700">
+                                    <td class="px-4 py-3"><?= $no++ ?></td>
+                                    <td class="px-4 py-3"><?= htmlspecialchars($row['nama_admin']) ?></td>
+                                    <td class="px-4 py-3"><?= htmlspecialchars($row['username']) ?></td>
+                                    <td class="px-4 py-3"><?= htmlspecialchars($row['password']) ?></td>
+                                    <td class="px-4 py-3"><?= htmlspecialchars($row['role']) ?></td>
+                                    <td class="px-4 py-3 flex gap-2">
+                                        <button type="button" class="text-yellow-400 hover:underline text-sm flex items-center" onclick='openEditAdminModal(<?= json_encode($row, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>)'>
+                                            <i data-lucide="rotate-ccw-square" class="w-4 h-4 mr-1"></i>Edit
+                                        </button>
+                                        <a href="delete.php?id=<?= $row['id_admin'] ?>" class="btn-hapus text-red-400 hover:underline text-sm flex items-center">
+                                            <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i>Hapus
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach;
+                        else: ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </main>
     <!-- Modal Edit Admin -->

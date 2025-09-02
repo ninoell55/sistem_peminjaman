@@ -18,9 +18,9 @@ if ($aksi === 'ajukan') {
     $res = mysqli_query($connection, $sql);
 
     if ($res) {
-        header('Location: peminjaman.php?msg=ajukan_pengembalian');
+        header('Location: peminjaman.php?success');
     } else {
-        header('Location: peminjaman.php?msg=error');
+        header('Location: peminjaman.php?success=error');
     }
     exit;
 }

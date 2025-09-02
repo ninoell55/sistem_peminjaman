@@ -33,7 +33,7 @@ require_once '../../../includes/sidebar.php';
 ?>
 
 <div class="md:ml-64 min-h-screen bg-gray-900 text-white p-6 pt-16 md:pt-24">
-    <main class="flex-1 md:p-6">
+    <main class="p-6">
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
             <div>
@@ -42,11 +42,13 @@ require_once '../../../includes/sidebar.php';
             </div>
         </div>
 
+        <?php showSuccessAlert(); ?>
+
         <!-- Isi -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
             <!-- Judul -->
             <h1 class="text-2xl font-semibold mb-6"><?= $pageTitle; ?></h1>
-                
+
             <!-- Alert -->
             <div class="bg-yellow-700 text-yellow-200 p-4 rounded-lg mb-6">
                 <p class="flex items-center gap-2">
@@ -71,20 +73,11 @@ require_once '../../../includes/sidebar.php';
                         Tambah Peminjaman
                     </button>
                 </div>
-
-                <!-- Search -->
-                <div>
-                    <input
-                        type="text"
-                        id="search"
-                        placeholder="Cari..."
-                        class="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                </div>
             </div>
 
             <!-- Tabel -->
-            <div class="overflow-x-auto">
-                <table class="min-w-full bg-gray-800 text-sm text-white table-auto border-collapse">
+            <div>
+                <table id="dataTables" class="overflow-x-auto min-w-full bg-gray-800 text-sm text-white table-auto border-collapse display responsive nowrap">
                     <thead>
                         <tr class="bg-gray-700 text-left">
                             <th class="px-4 py-3">#</th>
@@ -191,8 +184,10 @@ require_once '../../../includes/sidebar.php';
                                         <?php if ($row['status'] == 'dipinjam'): ?>
                                             <a title="Ajukan Pengembalian"
                                                 href="ajukan_pengembalian.php?id=<?= $row['id_peminjaman']; ?>&aksi=ajukan"
-                                                onclick="return confirm('Ajukan pengembalian untuk peminjaman ini?')"
-                                                class="inline-flex items-center justify-center w-8 h-8 rounded bg-yellow-500 hover:bg-yellow-600 text-white transition">
+                                                class="btn-ajukan-pengembalian inline-flex items-center justify-center w-8 h-8 rounded bg-yellow-500 hover:bg-yellow-600 text-white transition"
+                                                data-jumlah="<?= $row['jumlah']; ?>"
+                                                data-komoditas="<?= $row['nama_barang']; ?>"
+                                                data-peminjam="<?= $row['nama_pengguna']; ?>">
                                                 <i data-lucide="check" class="w-4 h-4 bg-black rounded-full"></i>
                                             </a>
                                         <?php endif; ?>
@@ -211,11 +206,6 @@ require_once '../../../includes/sidebar.php';
                                 </tr>
                             <?php endforeach;
                         else: ?>
-                            <tr>
-                                <td colspan="11" class="py-4 px-5 text-center text-gray-500 dark:text-gray-400">
-                                    Tidak ada data peminjaman hari ini.
-                                </td>
-                            </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>

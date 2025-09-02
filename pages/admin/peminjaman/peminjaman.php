@@ -33,6 +33,8 @@ require_once '../../../includes/sidebar.php';
             </div>
         </div>
 
+        <?php showSuccessAlert(); ?>
+
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
             <!-- Judul -->
             <h1 class="text-2xl font-semibold mb-6"><?= $pageTitle; ?></h1>
@@ -48,8 +50,8 @@ require_once '../../../includes/sidebar.php';
                 </p>
             </div>
 
-            <div class="p-6 overflow-x-auto">
-                <table class="min-w-full bg-gray-800 text-sm text-white table-auto border-collapse">
+            <div>
+                <table id="dataTables" class="overflow-x-auto min-w-full bg-gray-800 text-sm text-white table-auto border-collapse display responsive nowrap">
                     <thead>
                         <tr class="bg-gray-700 text-left">
                             <th class="px-4 py-3">#</th>
@@ -137,16 +139,20 @@ require_once '../../../includes/sidebar.php';
                                             <!-- ACC peminjaman -->
                                             <a title="Validasi Peminjaman Pengguna?"
                                                 href="acc_peminjaman.php?id=<?= $row['id_peminjaman']; ?>&aksi=acc"
-                                                onclick="return confirm('Setujui peminjaman ini?')"
-                                                class="inline-flex items-center justify-center w-8 h-8 rounded bg-blue-500 hover:bg-blue-600 text-white transition">
+                                                class="btn-setujui inline-flex items-center justify-center w-8 h-8 rounded bg-blue-500 hover:bg-blue-600 text-white transition"
+                                                data-jumlah="<?= $row['jumlah']; ?>"
+                                                data-komoditas="<?= $row['nama_barang']; ?>"
+                                                data-peminjam="<?= $row['nama_pengguna']; ?>">
                                                 <i data-lucide="user-lock" class="w-4 h-4"></i>
                                             </a>
                                         <?php elseif ($row['status'] == 'menunggu_pengembalian'): ?>
                                             <!-- ACC pengembalian -->
                                             <a title="Validasi Pengembalian Pengguna?"
                                                 href="acc_peminjaman.php?id=<?= $row['id_peminjaman']; ?>&aksi=acc_pengembalian"
-                                                onclick="return confirm('Setujui pengembalian ini?')"
-                                                class="inline-flex items-center justify-center w-8 h-8 rounded bg-blue-500 hover:bg-blue-600 text-white transition">
+                                                class="btn-setujui-pengembalian inline-flex items-center justify-center w-8 h-8 rounded bg-blue-500 hover:bg-blue-600 text-white transition"
+                                                data-jumlah="<?= $row['jumlah']; ?>"
+                                                data-komoditas="<?= $row['nama_barang']; ?>"
+                                                data-peminjam="<?= $row['nama_pengguna']; ?>">
                                                 <i data-lucide="user-lock" class="w-4 h-4"></i>
                                             </a>
                                         <?php endif; ?>
@@ -171,13 +177,8 @@ require_once '../../../includes/sidebar.php';
                                         </button>
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="11" class="py-4 px-5 text-center text-gray-500 dark:text-gray-400">
-                                    Tidak ada data peminjaman hari ini.
-                                </td>
-                            </tr>
+                            <?php endforeach;
+                        else: ?>
                         <?php endif; ?>
                     </tbody>
                 </table>

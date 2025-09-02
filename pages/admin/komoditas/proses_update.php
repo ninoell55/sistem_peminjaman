@@ -16,6 +16,18 @@ if (isset($_POST['updateKomoditas'])) {
     $kondisi = $_POST['kondisi'];
     $deskripsi = $_POST['deskripsi'] ?? '';
 
+    // Validate inputs
+    if (empty($nama_barang) || empty($id_kategori) || empty($jumlah_total) || empty($jumlah_tersedia) || empty($lokasi) || empty($kondisi)) {
+        header("Location: read.php?success=error");
+        exit;
+    }
+
+    // Pastikan jumlah_total dan jumlah_tersedia adalah integer dan tidak kurang dari 0
+    if ($jumlah_total < 0 || $jumlah_tersedia < 0) {
+        header("Location: read.php?success=error");
+        exit;
+    }
+    
     // Ambil gambar lama
     $stmt_select = $connection->prepare("SELECT image FROM barang WHERE id_barang = ?");
     $stmt_select->bind_param("i", $id_barang);
@@ -41,7 +53,7 @@ if (isset($_POST['updateKomoditas'])) {
                 }
             }
         } else {
-            echo "Tipe file gambar tidak valid!";
+            header("Location: read.php?success=error");
             exit;
         }
     }
@@ -51,12 +63,14 @@ if (isset($_POST['updateKomoditas'])) {
     $stmt->bind_param("siisssssi", $nama_barang, $id_kategori, $jumlah_total, $jumlah_tersedia, $lokasi, $kondisi, $deskripsi, $image, $id_barang);
 
     if ($stmt->execute()) {
-        header("Location: read.php?update=1");
+        header("Location: read.php?success=edit");
         exit;
     } else {
-        echo "Gagal update data: " . $stmt->error;
+        header("Location: read.php?success=error");
+        exit;
     }
     $stmt->close();
 } else {
-    echo "Data tidak valid!";
+    header("Location: read.php?success=invalid");
+    exit;
 }

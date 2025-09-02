@@ -18,7 +18,7 @@ if (isset($_POST['updatePengguna'])) {
 
     // Validasi input
     if ($id_pengguna === 0 || $nama_pengguna === '' || $username === '' || $role === '') {
-        echo '<script>alert("Semua field wajib diisi!");history.back();</script>';
+        header("Location: read.php?success=error");
         exit;
     }
 
@@ -30,7 +30,7 @@ if (isset($_POST['updatePengguna'])) {
     $stmt_cek->fetch();
     $stmt_cek->close();
     if ($total > 0) {
-        echo '<script>alert("Username sudah digunakan!");history.back();</script>';
+        header("Location: read.php?success=twin");
         exit;
     }
 
@@ -50,12 +50,14 @@ if (isset($_POST['updatePengguna'])) {
     }
 
     if ($stmt->execute()) {
-        echo '<script>alert("Pengguna berhasil diupdate!");window.location.href="read.php";</script>';
+        header("Location: read.php?success=edit");
         exit;
     } else {
-        echo '<script>alert("Gagal update pengguna: ' . htmlspecialchars($stmt->error) . '");history.back();</script>';
+        header("Location: read.php?success=error");
+        exit;
     }
     $stmt->close();
 } else {
-    echo '<script>alert("Akses tidak valid.");history.back();</script>';
+    header("Location: read.php?success=invalid");
+    exit;
 }

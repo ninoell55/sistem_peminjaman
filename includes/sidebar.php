@@ -61,7 +61,7 @@
                 <p class="text-sm font-semibold uppercase text-gray-500 dark:text-gray-400 mb-3">Manajemen Akun</p>
                 <div class="space-y-3">
                     <a href="<?= $base_url; ?>pages/admin/set_admin/read.php" class="flex items-center px-4 py-2 rounded-md <?= isActive('/set_admin/') ? 'bg-indigo-600 text-white hover:bg-indigo-800 transition ease-in-out' : 'dark:hover:bg-gray-800' ?>">
-                        <i data-lucide="shield" class="w-5 h-5 mr-2"></i>
+                        <i data-lucide="shield-check" class="w-5 h-5 mr-2"></i>
                         Administrator
                     </a>
                     <a href="<?= $base_url; ?>pages/admin/set_pengguna/read.php" class="flex items-center px-4 py-2 rounded-md <?= isActive('/set_pengguna/') ? 'bg-indigo-600 text-white hover:bg-indigo-800 transition ease-in-out' : 'dark:hover:bg-gray-800' ?>">
@@ -127,12 +127,12 @@
     <div class="border-t border-gray-400 pt-4">
         <!-- cek untuk logout admin atau pengguna -->
         <?php if (isset($_SESSION['role']) && in_array($_SESSION['role'], ['administrator', 'petugas'])): ?>
-            <a href="<?= $base_url ?>auth/login_admin/logout.php" class="flex items-center px-4 py-2 rounded-md text-red-600 hover:bg-red-100 dark:hover:bg-red-800" onclick="return confirm('Yakin ingin keluar?');">
+            <a href="<?= $base_url ?>auth/login_admin/logout.php" class="btn-logout flex items-center px-4 py-2 rounded-md text-red-600 hover:bg-red-100 dark:hover:bg-red-800">
                 <i data-lucide="log-out" class="w-5 h-5 mr-2"></i>
                 Keluar
             </a>
         <?php elseif (isset($_SESSION['role']) && in_array($_SESSION['role'], ['siswa', 'guru', 'staff'])): ?>
-            <a href="<?= $base_url ?>auth/login_pengguna/logout.php" class="flex items-center px-4 py-2 rounded-md text-red-600 hover:bg-red-100 dark:hover:bg-red-800" onclick="return confirm('Yakin ingin keluar?');">
+            <a href="<?= $base_url ?>auth/login_pengguna/logout.php" class="btn-logout flex items-center px-4 py-2 rounded-md text-red-600 hover:bg-red-100 dark:hover:bg-red-800">
                 <i data-lucide="log-out" class="w-5 h-5 mr-2"></i>
                 Keluar
             </a>

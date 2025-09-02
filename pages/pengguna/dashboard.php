@@ -62,18 +62,38 @@ require_once '../../includes/sidebar.php';
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div class="bg-indigo-600 rounded-lg p-6 shadow text-white">
-                <div class="text-lg font-semibold">Total Peminjaman Saya</div>
-                <div class="text-3xl font-bold mt-2"><?= $active ?></div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Total Peminjaman -->
+            <div class="bg-indigo-600 rounded-xl p-6 shadow-lg flex items-center gap-4 hover:scale-105 transition-transform duration-200">
+                <div class="p-3 bg-indigo-700 rounded-full flex items-center justify-center">
+                    <i data-lucide="clipboard-list" class="w-6 h-6 text-white"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-white text-sm font-medium">Total Peminjaman Saya</span>
+                    <span class="text-white text-3xl font-bold mt-1"><?= $active ?></span>
+                </div>
             </div>
-            <div class="bg-green-600 rounded-lg p-6 shadow text-white">
-                <div class="text-lg font-semibold">Peminjaman Sudah Dikembalikan</div>
-                <div class="text-3xl font-bold mt-2"><?= $done ?></div>
+
+            <!-- Peminjaman Sudah Dikembalikan -->
+            <div class="bg-green-600 rounded-xl p-6 shadow-lg flex items-center gap-4 hover:scale-105 transition-transform duration-200">
+                <div class="p-3 bg-green-700 rounded-full flex items-center justify-center">
+                    <i data-lucide="check-circle" class="w-6 h-6 text-white"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-white text-sm font-medium">Peminjaman Sudah Dikembalikan</span>
+                    <span class="text-white text-3xl font-bold mt-1"><?= $done ?></span>
+                </div>
             </div>
-            <div class="bg-red-600 rounded-lg p-6 shadow text-white">
-                <div class="text-lg font-semibold">Peminjaman Belum Dikembalikan</div>
-                <div class="text-3xl font-bold mt-2"><?= $undone ?></div>
+
+            <!-- Peminjaman Belum Dikembalikan -->
+            <div class="bg-red-600 rounded-xl p-6 shadow-lg flex items-center gap-4 hover:scale-105 transition-transform duration-200">
+                <div class="p-3 bg-red-700 rounded-full flex items-center justify-center">
+                    <i data-lucide="alert-circle" class="w-6 h-6 text-white"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-white text-sm font-medium">Peminjaman Belum Dikembalikan</span>
+                    <span class="text-white text-3xl font-bold mt-1"><?= $undone ?></span>
+                </div>
             </div>
         </div>
 
@@ -176,3 +196,21 @@ require_once '../../includes/sidebar.php';
 </div>
 
 <?php require_once '../../includes/footer.php' ?>
+
+<?php if (isset($_SESSION['login_success']) && $_SESSION['login_success']) : ?>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Login Berhasil!',
+            text: 'Selamat datang di sistem peminjaman SMKN 1 CIREBON.',
+            timer: 2000,
+            showConfirmButton: false,
+            timerProgressBar: true,
+            background: "#1f2937",
+            color: "#f9fafb"
+        }).then(() => {
+            window.history.replaceState(null, null, window.location.pathname);
+        });
+    </script>
+    <?php unset($_SESSION['login_success']); ?>
+<?php endif; ?>

@@ -31,13 +31,15 @@ if (isset($_GET['id'])) {
     $stmt->bind_param("i", $id_barang);
 
     if ($stmt->execute()) {
-        echo '<script>alert("Barang berhasil dihapus!");window.location.href="read.php";</script>';
+        header("Location: read.php?success=hapus");
         exit;
     } else {
-        echo '<script>alert("Tidak boleh menghapus data barang yang sudah pernah dipinjam di sistem ini.");history.back();</script>';
+        header("Location: read.php?success=invalid");
+        exit;
     }
 
     $stmt->close();
 } else {
-    echo "ID barang tidak ditemukan.";
+    header("Location: read.php?success=error");
+    exit;
 }

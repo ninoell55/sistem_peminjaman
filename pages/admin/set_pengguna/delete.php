@@ -12,12 +12,14 @@ if (isset($_GET['id'])) {
     $stmt = $connection->prepare("DELETE FROM pengguna WHERE id_pengguna = ?");
     $stmt->bind_param("i", $id_pengguna);
     if ($stmt->execute()) {
-        echo '<script>alert("Pengguna berhasil dihapus!");window.location.href="read.php";</script>';
+        header("Location: read.php?success=hapus");
         exit;
     } else {
-        echo '<script>alert("Tidak boleh menghapus data pengguna yang sudah melakukan peminjaman di sistem ini.");history.back();</script>';
+        header("Location: read.php?success=invalid");
+        exit;
     }
     $stmt->close();
 } else {
-    echo '<script>alert("ID pengguna tidak ditemukan.");history.back();</script>';
+    header("Location: read.php?success=error");
+    exit;
 }

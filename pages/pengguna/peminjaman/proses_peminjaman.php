@@ -18,6 +18,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = 'menunggu';
     $catatan = $_POST['catatan'] ?? '';
 
+    // Validasi input
+    if (!$id_pengguna || !$id_barang) {
+        header('Location: peminjaman.php?success=invalid');
+        exit;
+    }
+
+    // Watku pinjam tidak boleh kurang dari tanggal hari ini dan jam sekarang dan waktu pinjam tidak boleh lebih dari 7 hari dari tanggal hari ini
+    $jamSekarang = date('H:i:s');
+    $tanggalHariIni = date('Y-m-d');
+    $tanggalMaksimal = date('Y-m-d', strtotime('+7 days'));
+    if ($waktu_pinjam < $tanggalHariIni . ' ' . $jamSekarang || $waktu_pinjam > $tanggalMaksimal) {
+        header('Location: peminjaman.php?success=invalid');
+        exit;
+    }
+
+    // Jumlah pinjam minimal 1
+    if ($jumlah < 1) {
+        header('Location: peminjaman.php?success=invalid');
+        exit;
+    }
+
+    // Jumlah pinjam tidak boleh melebih dari jumlah tersedia
+    $sqlCek = "SELECT jumlah_tersedia FROM barang WHERE id_barang = ?";
+    $stmtCek = $connection->prepare($sqlCek);
+    $stmtCek->bind_param("i", $id_barang);
+    $stmtCek->execute();
+    $resultCek = $stmtCek->get_result();
+    if ($resultCek->num_rows > 0) {
+        $dataCek = $resultCek->fetch_assoc();
+        if ($jumlah > $dataCek['jumlah_tersedia']) {
+            header('Location: peminjaman.php?success=invalid');
+            exit;
+        }
+    } else {
+        header('Location: peminjaman.php?success=error');
+        exit;
+    }
+
     // Insert data peminjaman
     $sql = "INSERT INTO peminjaman (id_pengguna, waktu_pinjam, waktu_kembali, status, catatan) VALUES (?, ?, ?, ?, NULLIF(?, ''))";
     $stmt = $connection->prepare($sql);
@@ -42,18 +80,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // execute the statement update barang
             if ($stmtUpdate->execute()) {
-                header('Location: peminjaman.php?success=1');
+                header('Location: peminjaman.php?success=tambah');
                 exit;
             } else {
-                header('Location: peminjaman.php?error=update_barang');
+                header('Location: peminjaman.php?success=error');
                 exit;
             }
         } else {
-            header('Location: peminjaman.php?error=insert_detail');
+            header('Location: peminjaman.php?success=error');
             exit;
         }
     } else {
-        header('Location: peminjaman.php?error=insert_peminjaman');
+        header('Location: peminjaman.php?success=error');
         exit;
     }
 }

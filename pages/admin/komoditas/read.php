@@ -19,81 +19,81 @@ require_once '../../../includes/sidebar.php';
 ?>
 
 <div class="md:ml-64 min-h-screen bg-gray-900 text-white p-6 pt-16 md:pt-24">
-    <main class="pt-5 md:p-6">
-        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-3.5">
+    <main class="p-6">
+        <div class="flex justify-between items-center mb-6">
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold"><?= $pageTitle; ?></h1>
-                <p class="text-gray-400 text-sm">Berikut adalah daftar seluruh barang yang tersedia.</p>
-            </div>
-            <div class="flex gap-4">
-                <button onclick="document.getElementById('modalKategori').classList.remove('hidden')" type="button" class="inline-flex items-center md:px-4 md:py-2 p-2 bg-gray-600 hover:bg-gray-700 rounded-full text-sm font-semibold text-white shadow">
-                    <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Tambah Kategori
-                </button>
-                ||
-                <a href="create.php" class="inline-flex items-center md:px-4 md:py-2 p-2 bg-indigo-600 hover:bg-indigo-700 rounded-full text-sm font-semibold text-white shadow">
-                    <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Tambah Barang
-                </a>
+                <h1 class="text-3xl font-bold"><?= $pageTitle; ?>.</h1>
+                <p class="text-gray-400 tracking-widest italic">~ Halaman Daftar <?= $pageTitle; ?>.</p>
             </div>
         </div>
 
-        <div class="overflow-x-auto rounded-2xl shadow">
-            <table class="min-w-full bg-gray-800 text-sm text-white table-auto border-collapse">
-                <thead>
-                    <tr class="bg-gray-700 text-left">
-                        <th class="px-4 py-3">#</th>
-                        <th class="px-4 py-3">Komoditas</th>
-                        <!-- <th class="px-4 py-3">Kategori</th> -->
-                        <th class="px-4 py-3">Jumlah</th>
-                        <th class="px-4 py-3">Lokasi</th>
-                        <!-- <th class="px-4 py-3">Kondisi</th> -->
-                        <!-- <th class="px-4 py-3">Image</th> -->
-                        <!-- <th class="px-4 py-3">Deskripsi</th> -->
-                        <th class="px-4 py-3">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php $no = 1;
-                    foreach ($komoditas as $row): ?>
-                        <tr class="border-t border-gray-700 hover:bg-gray-700">
-                            <td class="px-4 py-3"><?= $no++ ?></td>
-                            <td class="px-4 py-3"><?= htmlspecialchars($row['nama_barang']) ?></td>
-                            <!-- <td class="px-4 py-3"><?= htmlspecialchars($row['nama_kategori']) ?></td> -->
-                            <td class="px-4 py-3"><?= $row['jumlah_tersedia'] ?> / <?= $row['jumlah_total'] ?></td>
-                            <td class="px-4 py-3"><?= htmlspecialchars($row['lokasi']) ?></td>
-                            <!-- <td class="px-4 py-3"><?= htmlspecialchars($row['kondisi']) ?></td> -->
-                            <!-- <td class="px-4 py-3">
-                                <?php if (!empty($row['image'])): ?>
-                                    <div class="flex items-center justify-center w-20 h-20">
-                                        <img src="../../../assets/uploads/<?= htmlspecialchars($row['image']); ?>"
-                                            alt="Foto <?= htmlspecialchars($row['nama_barang']); ?>"
-                                            class="object-cover rounded-lg border-2 border-gray-600 shadow-md bg-white" />
-                                    </div>
-                                <?php else: ?>
-                                    <div class="flex items-center justify-center w-20 h-20 rounded-lg border-2 border-gray-600 bg-gray-200 text-gray-500 text-xs">
-                                        Tidak ada gambar
-                                    </div>
-                                <?php endif; ?>
-                            </td> -->
-                            <!-- <td class="px-4 py-3 max-w-xl"><?= htmlspecialchars($row['deskripsi']) ?></td> -->
-                            <td class="px-4 py-3 flex gap-2">
-                                <!-- Link Edit -->
-                                <a href="update.php?id=<?= $row['id_barang'] ?>"
-                                    class="text-yellow-400 hover:underline text-sm flex items-center">
-                                    <i data-lucide="rotate-ccw-square" class="w-4 h-4 mr-1"></i>Edit
-                                </a>
+        <?php showSuccessAlert(); ?>
 
-                                <!-- Link Hapus -->
-                                <a href="delete.php?id=<?= $row['id_barang'] ?>"
-                                    class="text-red-400 hover:underline text-sm flex items-center"
-                                    onclick="return confirm('Apakah Anda yakin ingin menghapus barang ini?');">
-                                    <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i>Hapus
-                                </a>
+        <div class="w-full max-w-full bg-gray-800 shadow-lg rounded-xl p-6">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-3.5">
+                <div>
+                    <p class="text-gray-400 italic font-bold">Berikut adalah daftar seluruh komoditas yang tersedia.</p>
+                    <h1 class="text-2xl font-bold">---</h1>
+                </div>
 
-                                <!-- Link Detail -->
-                                <a href="#"
-                                    class="text-blue-400 hover:underline text-sm flex items-center"
-                                    onclick="openDetailModal(
+                <div class="flex flex-wrap gap-3">
+                    <!-- Tambah Kategori -->
+                    <button
+                        onclick="document.getElementById('modalKategori').classList.remove('hidden')"
+                        type="button"
+                        class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 active:bg-gray-800 rounded-lg text-sm font-medium text-white shadow transition-all duration-200 ease-in-out">
+                        <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                        Tambah Kategori
+                    </button>
+
+                    <!-- Tambah Barang -->
+                    <a
+                        href="create.php"
+                        class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 rounded-lg text-sm font-medium text-white shadow transition-all duration-200 ease-in-out">
+                        <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                        Tambah Barang
+                    </a>
+                </div>
+            </div>
+
+            <div class="rounded-2xl">
+                <table id="dataTables" class="overflow-x-auto min-w-full bg-gray-800 text-sm text-white table-auto border-collapse display responsive nowrap">
+                    <thead>
+                        <tr class="bg-gray-700 text-left">
+                            <th class="px-4 py-3">#</th>
+                            <th class="px-4 py-3">Komoditas</th>
+                            <th class="px-4 py-3">Jumlah</th>
+                            <th class="px-4 py-3">Lokasi</th>
+                            <th class="px-4 py-3">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (count($komoditas) > 0): $no = 1; ?>
+                            <?php foreach ($komoditas as $row): ?>
+                                <tr class="border-t border-gray-700 hover:bg-gray-700">
+                                    <td class="px-4 py-3"><?= $no++ ?></td>
+                                    <td class="px-4 py-3"><?= htmlspecialchars($row['nama_barang']) ?></td>
+                                    <td class="px-4 py-3"><?= $row['jumlah_tersedia'] ?> / <?= $row['jumlah_total'] ?></td>
+                                    <td class="px-4 py-3"><?= htmlspecialchars($row['lokasi']) ?></td>
+                                    <td class="px-4 py-3 flex gap-2">
+                                        <!-- Link Edit -->
+                                        <a href="update.php?id=<?= $row['id_barang'] ?>"
+                                            class="text-yellow-400 hover:underline text-sm flex items-center">
+                                            <i data-lucide="rotate-ccw-square" class="w-4 h-4 mr-1"></i>Edit
+                                        </a>
+
+                                        <!-- Link Hapus -->
+                                        <a href="delete.php?id=<?= $row['id_barang'] ?>"
+                                            class="btn-hapus text-red-400 hover:underline text-sm flex items-center">
+                                            <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i>Hapus
+                                        </a>
+
+                                        <!-- Link Detail -->
+                                        <a href="#"
+                                            class="text-blue-400 hover:underline text-sm flex items-center"
+                                            onclick="openDetailModal(
                                         '<?= $row['nama_barang'] ?>',
+                                        '<?= $row['nama_kategori'] ?>',
                                         '<?= $row['jumlah_total'] ?>',
                                         '<?= $row['jumlah_tersedia'] ?>',
                                         '<?= $row['lokasi'] ?>',
@@ -101,13 +101,16 @@ require_once '../../../includes/sidebar.php';
                                         '../../../assets/uploads/<?= $row['image'] ?>',
                                         '<?= $row['deskripsi'] ?>'
                                     )">
-                                    <i data-lucide="info" class="w-4 h-4 mr-1"></i>Detail
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                                            <i data-lucide="info" class="w-4 h-4 mr-1"></i>Detail
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach;
+                        else: ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </main>
 
@@ -162,12 +165,18 @@ require_once '../../../includes/sidebar.php';
                                 <div id="detailKomoditas" class="bg-gray-800 px-3 py-2 rounded-md"></div>
                             </div>
                             <div>
-                                <p class="text-sm text-gray-400 flex items-center gap-1">Jumlah Total</p>
-                                <div id="detailTotal" class="bg-gray-800 px-3 py-2 rounded-md"></div>
+                                <p class="text-sm text-gray-400 flex items-center gap-1">Kategori</p>
+                                <div id="detailKategori" class="bg-gray-800 px-3 py-2 rounded-md"></div>
                             </div>
-                            <div>
-                                <p class="text-sm text-gray-400 flex items-center gap-1">Jumlah Tersedia</p>
-                                <div id="detailTersedia" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <p class="text-sm text-gray-400 flex items-center gap-1">Jumlah Total</p>
+                                    <div id="detailTotal" class="bg-gray-800 px-3 py-2 rounded-md"></div>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-400 flex items-center gap-1">Jumlah Tersedia</p>
+                                    <div id="detailTersedia" class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md"></div>
+                                </div>
                             </div>
                             <div>
                                 <p class="text-sm text-gray-400 flex items-center gap-1">Lokasi</p>

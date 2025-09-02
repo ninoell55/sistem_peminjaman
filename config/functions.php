@@ -112,3 +112,57 @@ function query($query)
     return $rows;
 }
 // SELECT DATA >>>
+
+
+// <<< PESAN SUKSES
+function showSuccessAlert()
+{
+    if (!isset($_GET['success'])) return;
+
+    $type = $_GET['success'];
+    $message = match ($type) {
+        'tambah' => 'Data berhasil ditambahkan!',
+        'edit' => 'Data berhasil diedit!',
+        'hapus' => 'Data berhasil dihapus!',
+        'invalid' => 'Something wrong... data berkaitan dengan data yang lain, hubungi admin jika ingin melakukan aksi!',
+        'twin' => 'Data sudah tersedia, silahkan melakukan perubahan data.',
+        'error' => 'Error! Gagal melakukan aksi.',
+        default => 'Aksi berhasil dilakukan.'
+    };
+
+    $icon = ($type === 'hapus' || $type === 'invalid' || $type === 'error' || $type === 'twin') ? 'error' : 'success';
+
+    echo "
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: '$message',
+                icon: '$icon',
+                background: '#1f2937',     // dark background
+                color: '#f9fafb',          // light text
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3b82f6', // blue
+            }).then(() => {
+                window.history.replaceState(null, null, window.location.pathname);
+            }).then(() => {
+                Swal.fire({
+                    toast: true,
+                    position: 'bottom-end',
+                    icon: '$icon',
+                    title: '$message',
+                    background: '#1f2937',  // dark toast
+                    color: '#f9fafb',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+            });
+        });
+    </script>
+    ";
+}
+// PESAN SUKSES >>>

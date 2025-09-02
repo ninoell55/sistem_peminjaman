@@ -24,7 +24,7 @@ require_once '../../../includes/sidebar.php';
 <div class="md:ml-64 min-h-screen bg-gray-900 text-white p-6 pt-16 md:pt-24">
     <main class="flex-1 md:p-6">
         <!-- Header + Search -->
-        <div class="bg-white/5 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-4 mb-6 shadow-lg">
+        <div class="sticky top-20 z-20 bg-white/5 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-4 mb-6 shadow-lg">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <!-- Judul -->
                 <h1 class="text-3xl font-extrabold tracking-tight text-indigo-400 drop-shadow-sm flex items-center gap-2">

@@ -17,8 +17,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $waktu_pinjam_baru = $_POST['waktu_pinjam'] ?? date('Y-m-d');
     $catatan_baru = $_POST['catatan'] ?? '';
 
+    // Validasi input
     if (!$id_peminjaman || !$id_barang_baru) {
-        header('Location: peminjaman.php?error=invalid_data');
+        header('Location: peminjaman.php?success=invalid');
+        exit;
+    }
+
+    // Watku pinjam tidak boleh kurang dari tanggal hari ini dan jam sekarang dan waktu pinjam tidak boleh lebih dari 7 hari dari tanggal hari ini
+    $jamSekarang = date('H:i:s');
+    $tanggalHariIni = date('Y-m-d');
+    $tanggalMaksimal = date('Y-m-d', strtotime('+7 days'));
+    if ($waktu_pinjam_baru < $tanggalHariIni . ' ' . $jamSekarang || $waktu_pinjam_baru > $tanggalMaksimal) {
+        header('Location: peminjaman.php?success=invalid');
+        exit;
+    }
+
+    // Jumlah pinjam minimal 1
+    if ($jumlah_baru < 1) {
+        header('Location: peminjaman.php?success=invalid');
+        exit;
+    }
+    
+    // Jumlah pinjam tidak boleh melebih dari jumlah tersedia
+    $sqlCek = "SELECT jumlah_tersedia FROM barang WHERE id_barang = ?";
+    $stmtCek = $connection->prepare($sqlCek);
+    $stmtCek->bind_param("i", $id_barang_baru);
+    $stmtCek->execute();
+    $resultCek = $stmtCek->get_result();
+    if ($resultCek->num_rows > 0) {
+        $dataCek = $resultCek->fetch_assoc();
+        if ($jumlah_baru > $dataCek['jumlah_tersedia']) {
+            header('Location: peminjaman.php?success=invalid');
+            exit;
+        }
+    } else {
+        header('Location: peminjaman.php?success=error');
         exit;
     }
 
@@ -65,18 +98,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmtKurang->bind_param("ii", $jumlah_baru, $id_barang_baru);
 
             if ($stmtKurang->execute()) {
-                header('Location: peminjaman.php?edit_success=1');
+                header('Location: peminjaman.php?success=edit');
                 exit;
             } else {
-                header('Location: peminjaman.php?error=update_stok');
+                header('Location: peminjaman.php?success=error');
                 exit;
             }
         } else {
-            header('Location: peminjaman.php?error=update_detail');
+            header('Location: peminjaman.php?success=error');
             exit;
         }
     } else {
-        header('Location: peminjaman.php?error=update_peminjaman');
+        header('Location: peminjaman.php?success=error');
         exit;
     }
 }

@@ -8,6 +8,10 @@ if (!isset($_SESSION['login_pengguna'])) {
     exit;
 }
 
+// Ambil daftar barang yang bisa dipinjam
+$daftar_barang = query("SELECT * FROM barang WHERE jumlah_tersedia > 0 ORDER BY nama_barang ASC");
+$id_barang_selected = isset($_GET['id_barang']) ? intval($_GET['id_barang']) : '';
+
 $id_pengguna = $_SESSION['id_pengguna'] ?? null;
 $nama_pengguna = $_SESSION['nama_pengguna'] ?? '';
 
@@ -20,7 +24,7 @@ if (!empty($_GET['tanggal_dari']) && !empty($_GET['tanggal_sampai'])) {
 
 $riwayat = query(
     "SELECT 
-        p.*, u.*, b.nama_barang, d.jumlah
+        p.*, u.*, b.nama_barang, d.id_barang, d.jumlah
             FROM peminjaman p
                 JOIN pengguna u ON p.id_pengguna = u.id_pengguna
                 JOIN detail_peminjaman d ON p.id_peminjaman = d.id_peminjaman
@@ -43,6 +47,8 @@ require_once '../../../includes/sidebar.php';
             </div>
         </div>
 
+        <?php showSuccessAlert(); ?>
+
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
             <!-- Judul -->
             <h1 class="text-2xl font-semibold mb-6"><?= $pageTitle; ?></h1>
@@ -54,8 +60,8 @@ require_once '../../../includes/sidebar.php';
             </div>
 
             <!-- Filter Box -->
-            <div class="bg-gray-800 p-4 rounded-lg shadow-md">
-                <form method="GET">
+            <div>
+                <form method="GET" class="bg-gray-800 p-4 rounded-lg shadow-2xl border border-gray-600 mb-8">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Dari -->
                         <div>
@@ -79,8 +85,8 @@ require_once '../../../includes/sidebar.php';
             </div>
 
             <!-- Tabel -->
-            <div class="p-6 overflow-x-auto">
-                <table class="min-w-full bg-gray-800 text-sm text-white table-auto border-collapse">
+            <div>
+                <table id="dataTables" class="overflow-x-auto min-w-full bg-gray-800 text-sm text-white table-auto border-collapse display responsive nowrap">
                     <thead>
                         <tr class="bg-gray-700 text-left">
                             <th class="px-4 py-3">#</th>
@@ -187,8 +193,10 @@ require_once '../../../includes/sidebar.php';
                                         <?php if ($row['status'] == 'dipinjam'): ?>
                                             <a title="Ajukan Pengembalian"
                                                 href="ajukan_pengembalian.php?id=<?= $row['id_peminjaman']; ?>&aksi=ajukan"
-                                                onclick="return confirm('Ajukan pengembalian untuk peminjaman ini?')"
-                                                class="inline-flex items-center justify-center w-8 h-8 rounded bg-yellow-500 hover:bg-yellow-600 text-white transition">
+                                                class="btn-ajukan-pengembalian inline-flex items-center justify-center w-8 h-8 rounded bg-yellow-500 hover:bg-yellow-600 text-white transition"
+                                                data-jumlah="<?= $row['jumlah']; ?>"
+                                                data-komoditas="<?= $row['nama_barang']; ?>"
+                                                data-peminjam="<?= $row['nama_pengguna']; ?>">
                                                 <i data-lucide="check" class="w-4 h-4 bg-black rounded-full"></i>
                                             </a>
                                         <?php endif; ?>
@@ -207,11 +215,6 @@ require_once '../../../includes/sidebar.php';
                                 </tr>
                             <?php endforeach;
                         else: ?>
-                            <tr>
-                                <td colspan="11" class="py-4 px-5 text-center text-gray-500 dark:text-gray-400">
-                                    Tidak ada data riwayat peminjaman.
-                                </td>
-                            </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>

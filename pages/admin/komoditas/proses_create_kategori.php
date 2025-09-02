@@ -10,7 +10,7 @@ if (isset($_POST['tambahKategori'])) {
     $nama_kategori = trim($_POST['nama_kategori']);
     // Validasi input
     if ($nama_kategori === '') {
-        echo '<script>alert("Nama kategori tidak boleh kosong!");history.back();</script>';
+        header("Location: read.php?success=error");
         exit;
     }
     // Sanitasi input
@@ -23,19 +23,21 @@ if (isset($_POST['tambahKategori'])) {
     $stmt_cek->fetch();
     $stmt_cek->close();
     if ($total > 0) {
-        echo '<script>alert("Kategori sudah ada!");history.back();</script>';
+        header("Location: read.php?success=twin");
         exit;
     }
     // Insert kategori baru
     $stmt = $connection->prepare("INSERT INTO kategori (nama_kategori) VALUES (?)");
     $stmt->bind_param("s", $nama_kategori);
     if ($stmt->execute()) {
-        echo '<script>window.location.href = "read.php?success=1";</script>';
+        header("Location: read.php?success=tambah");
         exit;
     } else {
-        echo "Gagal tambah kategori: " . $stmt->error;
+        header("Location: read.php?success=error");
+        exit;
     }
     $stmt->close();
 } else {
-    echo "Akses tidak valid.";
+    header("Location: read.php?success=invalid");
+    exit;
 }

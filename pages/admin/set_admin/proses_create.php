@@ -14,7 +14,7 @@ if (isset($_POST['tambahAdmin'])) {
 
     // Validasi input
     if ($nama_admin === '' || $username === '' || $password === '' || $role === '') {
-        echo '<script>alert("Semua field wajib diisi!");history.back();</script>';
+        header("Location: read.php?success=error");
         exit;
     }
 
@@ -26,7 +26,7 @@ if (isset($_POST['tambahAdmin'])) {
     $stmt_cek->fetch();
     $stmt_cek->close();
     if ($total > 0) {
-        echo '<script>alert("Username sudah digunakan!");history.back();</script>';
+        header("Location: read.php?success=twin");
         exit;
     }
 
@@ -34,12 +34,14 @@ if (isset($_POST['tambahAdmin'])) {
     $stmt = $connection->prepare("INSERT INTO admin (nama_admin, username, password, role) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("ssss", $nama_admin, $username, $password, $role);
     if ($stmt->execute()) {
-        echo '<script>alert("Admin berhasil ditambahkan!");window.location.href="read.php";</script>';
+        header("Location: read.php?success=tambah");
         exit;
     } else {
-        echo '<script>alert("Gagal tambah admin: ' . htmlspecialchars($stmt->error) . '");history.back();</script>';
+        header("Location: read.php?success=error");
+        exit;
     }
     $stmt->close();
 } else {
-    echo '<script>alert("Akses tidak valid.");history.back();</script>';
+    header("Location: read.php?success=invalid");
+    exit;
 }

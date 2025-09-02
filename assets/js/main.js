@@ -30,12 +30,82 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Deteksi klik di luar sidebar
   document.addEventListener("click", function (e) {
-    const isClickInsideSidebar = sidebar.contains(e.target);
-    const isClickOnToggle = toggleButton.contains(e.target);
+    const sidebar = document.querySelector("#sidebar");
+    const toggleButton = document.querySelector("#toggleButton");
+
+    const isClickInsideSidebar = sidebar ? sidebar.contains(e.target) : false;
+    const isClickOnToggle = toggleButton
+      ? toggleButton.contains(e.target)
+      : false;
 
     if (!isClickInsideSidebar && !isClickOnToggle && window.innerWidth < 768) {
       closeSidebar();
     }
+  });
+});
+
+// ===== DataTables =====
+$(document).ready(function () {
+  const table = $("#dataTables").DataTable({
+    responsive: true,
+    language: {
+      paginate: {
+        previous: "←",
+        next: "→",
+      },
+      search: "",
+      searchPlaceholder: "Pencarian ... ",
+      lengthMenu: "_MENU_",
+      emptyTable: "Tidak ada data tersedia",
+      zeroRecords: "Tidak ada data yang cocok",
+      info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+      infoEmpty: "Menampilkan 0 sampai 0 dari 0 entri",
+      infoFiltered: "(disaring dari _MAX_ total entri)"
+    },
+    initComplete: function () {
+      const wrapper = $("#dataTables_wrapper");
+      const length = wrapper.find(".dataTables_length");
+      const filter = wrapper.find(".dataTables_filter");
+
+      const topContainer = $(`
+        <div class="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center mb-4">
+        </div>
+      `);
+
+      // Style dropdown jumlah data
+      length
+        .find("select")
+        .addClass(
+          "px-3 py-1.5 text-sm text-gray-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        );
+
+      // Style input search
+      filter
+        .find("input")
+        .addClass(
+          "px-4 py-2 text-sm placeholder:text-gray-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
+        );
+
+      topContainer.append(length).append(filter);
+      wrapper.find(".dataTables_length, .dataTables_filter").remove();
+      wrapper.prepend(topContainer);
+
+      // Pagination styling
+      wrapper
+        .find(".dataTables_paginate a")
+        .addClass(
+          "inline-block border border-gray-300 rounded-md px-3 py-1 mx-1 text-sm text-gray-700 bg-white hover:bg-blue-100 hover:text-blue-600 transition duration-200 ease-in-out mt-2"
+        );
+
+      // Active page styling
+      wrapper
+        .find(".dataTables_paginate .current")
+        .removeClass("bg-white")
+        .addClass("bg-blue-500 text-white hover:bg-blue-600");
+
+      // Info text styling
+      wrapper.find(".dataTables_info").addClass("text-sm italic mt-2");
+    },
   });
 });
 
@@ -179,6 +249,7 @@ if (modalKategoriBg) {
 // Fungsi openDetailModal (cek semua elemen dulu)
 function openDetailModal(
   komoditas,
+  kategori,
   total,
   tersedia,
   lokasi,
@@ -190,6 +261,7 @@ function openDetailModal(
   if (!detailModal) return; // kalau modal tidak ada, langsung keluar
 
   const komoditasEl = document.getElementById("detailKomoditas");
+  const kategoriEl = document.getElementById("detailKategori");
   const totalEl = document.getElementById("detailTotal");
   const tersediaEl = document.getElementById("detailTersedia");
   const lokasiEl = document.getElementById("detailLokasi");
@@ -198,6 +270,7 @@ function openDetailModal(
   const imgContainer = document.getElementById("detailImage");
 
   if (komoditasEl) komoditasEl.textContent = komoditas || "-";
+  if (kategoriEl) kategoriEl.textContent = kategori || "-";
   if (totalEl) totalEl.textContent = total || "-";
   if (tersediaEl) tersediaEl.textContent = tersedia || "-";
   if (lokasiEl) lokasiEl.textContent = lokasi || "-";
@@ -376,3 +449,134 @@ function formatDateTime(datetimeString) {
   const minutes = String(d.getMinutes()).padStart(2, "0");
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
+
+// Sweet-Alert confirm to DELETE
+$(document).ready(function () {
+  if (!$.fn.DataTable.isDataTable("#dataTables")) {
+    $("#dataTables").DataTable({
+      responsive: true,
+    });
+  }
+
+  // Event hapus dengan SweetAlert (sama seperti sebelumnya)
+  $(document).on("click", ".btn-hapus", function (e) {
+    e.preventDefault();
+    const url = $(this).attr("href");
+
+    Swal.fire({
+      title: "Yakin ingin menghapus?",
+      text: "Data yang dihapus akan diarsipkan dan bisa dikembalikan jika diperlukan.",
+      icon: "warning",
+      background: "#1f2937",
+      color: "#f9fafb",
+      showCancelButton: true,
+      confirmButtonColor: "#3b82f6",
+      cancelButtonColor: "#ef4444",
+      confirmButtonText: "Ya, hapus!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = url;
+      }
+    });
+  });
+});
+
+// Sweet-Alert confirm to LOGOUT
+$(document).on("click", ".btn-logout", function (e) {
+  e.preventDefault();
+  const url = $(this).attr("href");
+
+  Swal.fire({
+    title: "Keluar dari sistem?",
+    text: "Anda akan keluar dari akun saat ini.",
+    icon: "warning",
+    background: "#1f2937",
+    color: "#f9fafb",
+    showCancelButton: true,
+    confirmButtonColor: "#3b82f6",
+    cancelButtonColor: "#ef4444",
+    confirmButtonText: "Ya, Logout",
+    cancelButtonText: "Batal",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = url;
+    }
+  });
+});
+
+// Sweet-Alert confirm to ACCEPT peminjaman
+$(document).on("click", ".btn-setujui", function (e) {
+  e.preventDefault();
+  const url = $(this).attr("href");
+  const jumlah = $(this).data("jumlah");
+  const komoditas = $(this).data("komoditas");
+  const peminjam = $(this).data("peminjam");
+
+  Swal.fire({
+    title: "Setujui peminjaman?",
+    html: `Anda akan menyetujui peminjaman <strong>${jumlah} ${komoditas}</strong> oleh <strong>${peminjam}</strong>.`,
+    icon: "question",
+    background: "#1f2937",
+    color: "#f9fafb",
+    showCancelButton: true,
+    confirmButtonColor: "#3b82f6",
+    cancelButtonColor: "#ef4444",
+    confirmButtonText: "Ya, setujui",
+    cancelButtonText: "Batal",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = url;
+    }
+  });
+});
+
+// Sweet-Alert confirm to ACCEPT pengembalian
+$(document).on("click", ".btn-setujui-pengembalian", function (e) {
+  e.preventDefault();
+  const url = $(this).attr("href");
+  const jumlah = $(this).data("jumlah");
+  const komoditas = $(this).data("komoditas");
+  const peminjam = $(this).data("peminjam");
+  Swal.fire({
+    title: "Setujui pengembalian?",
+    html: `Anda akan menyetujui pengembalian <strong>${jumlah} ${komoditas}</strong> oleh <strong>${peminjam}</strong>.`,
+    icon: "question",
+    background: "#1f2937",
+    color: "#f9fafb",
+    showCancelButton: true,
+    confirmButtonColor: "#3b82f6",
+    cancelButtonColor: "#ef4444",
+    confirmButtonText: "Ya, setujui",
+    cancelButtonText: "Batal",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location = url;
+    }
+  });
+});
+
+// Sweet-Alert confirm to aJUKAN pengembalian
+$(document).on("click", ".btn-ajukan-pengembalian", function (e) {
+  e.preventDefault();
+  const url = $(this).attr("href");
+  const jumlah = $(this).data("jumlah");
+  const komoditas = $(this).data("komoditas");
+  const peminjam = $(this).data("peminjam");
+  Swal.fire({
+    title: "Ajukan pengembalian?",
+    html: `Anda akan mengajukan pengembalian <strong>${jumlah} ${komoditas}</strong> oleh <strong>${peminjam}</strong>.`,
+    icon: "question",
+    background: "#1f2937",
+    color: "#f9fafb",
+    showCancelButton: true,
+    confirmButtonColor: "#3b82f6",
+    cancelButtonColor: "#ef4444",
+    confirmButtonText: "Ya, ajukan",
+    cancelButtonText: "Batal",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location = url;
+    }
+  });
+});
+// end-SweetAlert <<-------

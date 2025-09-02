@@ -17,7 +17,7 @@ if (isset($_POST['tambahPengguna'])) {
 
     // Validasi input
     if ($nama_pengguna === '' || $username === '' || $password === '' || $role === '') {
-        echo '<script>alert("Semua field wajib diisi!");history.back();</script>';
+        header("Location: read.php?success=error");
         exit;
     }
 
@@ -29,7 +29,7 @@ if (isset($_POST['tambahPengguna'])) {
     $stmt_cek->fetch();
     $stmt_cek->close();
     if ($total > 0) {
-        echo '<script>alert("Username sudah digunakan!");history.back();</script>';
+        header("Location: read.php?success=twin");
         exit;
     }
 
@@ -43,12 +43,14 @@ if (isset($_POST['tambahPengguna'])) {
     $stmt = $connection->prepare("INSERT INTO pengguna (nama_pengguna, username, password, role, kelas, jurusan, nip_nis) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("sssssss", $nama_pengguna, $username, $password, $role, $kelas, $jurusan, $nip_nis);
     if ($stmt->execute()) {
-        echo '<script>alert("Pengguna berhasil ditambahkan!");window.location.href="read.php";</script>';
+        header("Location: read.php?success=tambah");
         exit;
     } else {
-        echo '<script>alert("Gagal tambah pengguna: ' . htmlspecialchars($stmt->error) . '");history.back();</script>';
+        header("Location: read.php?success=error");
+        exit;
     }
     $stmt->close();
 } else {
-    echo '<script>alert("Akses tidak valid.");history.back();</script>';
+    header("Location: read.php?success=invalid");
+    exit;
 }

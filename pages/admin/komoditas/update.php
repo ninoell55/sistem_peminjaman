@@ -14,7 +14,7 @@ $kategori = query("SELECT * FROM kategori ORDER BY nama_kategori ASC");
 $id_barang = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $barang = query("SELECT * FROM barang WHERE id_barang = $id_barang");
 if (!$barang) {
-    echo "<div class='text-red-500'>Data barang tidak ditemukan.</div>";
+    header("Location: read.php?success=error");
     exit;
 }
 $data = $barang[0];
@@ -25,9 +25,11 @@ require_once '../../../includes/sidebar.php';
 
 <div class="md:ml-64 min-h-screen bg-gray-900 text-white p-6 pt-24">
     <main class="p-6">
-        <div class="mb-6">
-            <h1 class="text-3xl font-bold mb-1"><?= $pageTitle; ?></h1>
-            <p class="text-gray-400">Ubah data barang di bawah ini.</p>
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold"><?= $pageTitle; ?>.</h1>
+                <p class="text-gray-400 tracking-widest italic">~ Halaman Daftar <?= $pageTitle; ?>.</p>
+            </div>
         </div>
 
         <form action="proses_update.php" method="POST" enctype="multipart/form-data" class="bg-gray-800 rounded-2xl shadow p-6 space-y-5">

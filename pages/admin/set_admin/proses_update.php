@@ -15,7 +15,7 @@ if (isset($_POST['updateAdmin'])) {
 
     // Validasi input
     if ($id_admin === 0 || $nama_admin === '' || $username === '' || $role === '') {
-        echo '<script>alert("Semua field wajib diisi!");history.back();</script>';
+        header("Location: read.php?success=error");
         exit;
     }
 
@@ -27,7 +27,7 @@ if (isset($_POST['updateAdmin'])) {
     $stmt_cek->fetch();
     $stmt_cek->close();
     if ($total > 0) {
-        echo '<script>alert("Username sudah digunakan!");history.back();</script>';
+        header("Location: read.php?success=twin");
         exit;
     }
 
@@ -41,12 +41,14 @@ if (isset($_POST['updateAdmin'])) {
     }
 
     if ($stmt->execute()) {
-        echo '<script>alert("Admin berhasil diupdate!");window.location.href="read.php";</script>';
+        header("Location: read.php?success=edit");
         exit;
     } else {
-        echo '<script>alert("Gagal update admin: ' . htmlspecialchars($stmt->error) . '");history.back();</script>';
+        header("Location: read.php?success=error");
+        exit;
     }
     $stmt->close();
 } else {
-    echo '<script>alert("Akses tidak valid.");history.back();</script>';
+    header("Location: read.php?success=invalid");
+    exit;
 }

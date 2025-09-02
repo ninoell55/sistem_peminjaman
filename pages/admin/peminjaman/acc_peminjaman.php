@@ -15,7 +15,7 @@ if ($aksi === 'acc') {
     $res = mysqli_query($connection, $sql);
 
     mysqli_query($connection, "UPDATE peminjaman SET status = 'dipinjam' WHERE id_peminjaman = $id");
-    header('Location: peminjaman.php?msg=acc_success');
+    header('Location: peminjaman.php?success');
     exit;
 } elseif ($aksi === 'acc_pengembalian') {
     // ACC pengembalian → status jadi dikembalikan + update stok
@@ -29,9 +29,9 @@ if ($aksi === 'acc') {
     }
 
     mysqli_query($connection, "UPDATE peminjaman SET status = 'dikembalikan' WHERE id_peminjaman = $id");
-    header('Location: peminjaman.php?msg=acc_pengembalian_success');
+    header('Location: peminjaman.php?success');
     exit;
 }
 
-header('Location: peminjaman.php?msg=error');
+header('Location: peminjaman.php?success=error');
 exit;

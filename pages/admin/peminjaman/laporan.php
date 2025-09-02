@@ -39,12 +39,14 @@ require_once '../../../includes/sidebar.php';
             </div>
         </div>
 
+        <?php showSuccessAlert(); ?>
+
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-8">
             <div class="px-6 py-4 border-b bg-indigo-600 rounded-t-lg">
                 <span class="text-lg font-semibold text-white">Filter Laporan</span>
             </div>
             <div class="p-6">
-                <form method="GET" class="bg-gray-800 p-4 rounded-lg shadow-md mb-8">
+                <form method="GET" class="bg-gray-800 p-4 rounded-lg shadow-2xl border border-gray-600 mb-8">
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
 
                         <!-- Dari Tanggal -->
@@ -91,8 +93,8 @@ require_once '../../../includes/sidebar.php';
                     </div>
                 </form>
 
-                <div class="overflow-x-auto">
-                    <table class="min-w-full bg-gray-800 text-sm text-white table-auto border-collapse">
+                <div>
+                    <table id="dataTables" class="overflow-x-auto min-w-full bg-gray-800 text-sm text-white table-auto border-collapse display responsive nowrap">
                         <thead>
                             <tr class="bg-gray-700 text-left">
                                 <th class="px-4 py-3">#</th>
@@ -180,20 +182,24 @@ require_once '../../../includes/sidebar.php';
                                                 <!-- ACC Peminjaman -->
                                                 <a title="Validasi Peminjaman Pengguna?"
                                                     href="acc_peminjaman.php?id=<?= $row['id_peminjaman']; ?>&aksi=acc"
-                                                    onclick="return confirm('Setujui peminjaman ini?')"
-                                                    class="inline-flex items-center justify-center w-8 h-8 rounded bg-blue-500 hover:bg-blue-600 text-white transition">
+                                                    class="btn-setujui inline-flex items-center justify-center w-8 h-8 rounded bg-blue-500 hover:bg-blue-600 text-white transition"
+                                                    data-jumlah="<?= $row['jumlah']; ?>"
+                                                    data-komoditas="<?= $row['nama_barang']; ?>"
+                                                    data-peminjam="<?= $row['nama_pengguna']; ?>">
                                                     <i data-lucide="user-lock" class="w-4 h-4"></i>
                                                 </a>
                                             <?php elseif ($row['status'] == 'menunggu_pengembalian'): ?>
                                                 <!-- ACC Pengembalian -->
                                                 <a title="Validasi Pengembalian Pengguna?"
                                                     href="acc_peminjaman.php?id=<?= $row['id_peminjaman']; ?>&aksi=acc_pengembalian"
-                                                    onclick="return confirm('Setujui pengembalian ini?')"
-                                                    class="inline-flex items-center justify-center w-8 h-8 rounded bg-blue-500 hover:bg-blue-600 text-white transition">
+                                                    class="btn-setujui-pengembalian inline-flex items-center justify-center w-8 h-8 rounded bg-blue-500 hover:bg-blue-600 text-white transition"
+                                                    data-jumlah="<?= $row['jumlah']; ?>"
+                                                    data-komoditas="<?= $row['nama_barang']; ?>"
+                                                    data-peminjam="<?= $row['nama_pengguna']; ?>">
                                                     <i data-lucide="user-lock" class="w-4 h-4"></i>
                                                 </a>
                                             <?php endif; ?>
-                                            
+
                                             <button title="Detail peminjaman" type="button"
                                                 class="openDetail inline-flex items-center gap-1 w-8 h-8 bg-green-700 hover:bg-green-800 text-white px-2 py-1 rounded text-xs"
 
@@ -216,9 +222,6 @@ require_once '../../../includes/sidebar.php';
                                     </tr>
                                 <?php endforeach;
                             else: ?>
-                                <tr>
-                                    <td colspan="6" class="px-4 py-3 text-center text-gray-400">Tidak ada data peminjaman untuk tanggal yang dipilih.</td>
-                                </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
