@@ -185,7 +185,7 @@ require_once '../../includes/sidebar.php';
                             <?php endforeach;
                         else: ?>
                             <tr>
-                                <td colspan="5" class="py-4 px-5 text-center text-gray-500 dark:text-gray-400">Tidak ada data peminjaman terakhir.</td>
+                                <td colspan="6" class="py-4 px-5 text-center text-gray-500 dark:text-gray-400">Tidak ada data peminjaman terakhir.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
