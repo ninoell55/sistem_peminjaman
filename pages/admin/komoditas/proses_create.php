@@ -25,7 +25,7 @@ if (isset($_POST['tambahKomoditas'])) {
     }
 
     // Pastikan jumlah_total dan jumlah_tersedia adalah integer dan tidak kurang dari 0
-    if ($jumlah_total < 0 || $jumlah_tersedia < 0) {
+    if ($jumlah_total < 0 || $jumlah_tersedia < 0 || $jumlah_tersedia > $jumlah_total) {
         header("Location: read.php?success=error");
         exit;
     }   

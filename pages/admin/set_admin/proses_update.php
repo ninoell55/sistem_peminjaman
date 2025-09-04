@@ -6,6 +6,12 @@ if (!isset($_SESSION['login_admin'])) {
     exit;
 }
 
+// HALAMAN HANYA UNTUK ROLE ADMINISTRATOR
+if (isset($_SESSION['role']) && ($_SESSION['role'] == 'petugas')) {
+    header("Location: ../../../auth/login_admin/login.php");
+    exit;
+}
+
 if (isset($_POST['updateAdmin'])) {
     $id_admin = intval($_POST['id_admin'] ?? 0);
     $nama_admin = trim($_POST['nama_admin'] ?? '');

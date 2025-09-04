@@ -63,6 +63,8 @@ if (isset($_SESSION['login_pengguna'])) {
             title: 'Login Gagal!',
             text: '<?= $_SESSION['login_error'] ?>',
             icon: 'error',
+            background: "#1f2937",
+            color: "#f9fafb",
             confirmButtonColor: '#3b82f6',
             confirmButtonText: 'Coba Lagi'
         }).then(() => {

@@ -60,10 +60,12 @@
             <div>
                 <p class="text-sm font-semibold uppercase text-gray-500 dark:text-gray-400 mb-3">Manajemen Akun</p>
                 <div class="space-y-3">
-                    <a href="<?= $base_url; ?>pages/admin/set_admin/read.php" class="flex items-center px-4 py-2 rounded-md <?= isActive('/set_admin/') ? 'bg-indigo-600 text-white hover:bg-indigo-800 transition ease-in-out' : 'dark:hover:bg-gray-800' ?>">
-                        <i data-lucide="shield-check" class="w-5 h-5 mr-2"></i>
-                        Administrator
-                    </a>
+                    <?php if ($_SESSION['role'] == 'administrator'): ?>
+                        <a href="<?= $base_url; ?>pages/admin/set_admin/read.php" class="flex items-center px-4 py-2 rounded-md <?= isActive('/set_admin/') ? 'bg-indigo-600 text-white hover:bg-indigo-800 transition ease-in-out' : 'dark:hover:bg-gray-800' ?>">
+                            <i data-lucide="shield-check" class="w-5 h-5 mr-2"></i>
+                            Administrator
+                        </a>
+                    <?php endif; ?>
                     <a href="<?= $base_url; ?>pages/admin/set_pengguna/read.php" class="flex items-center px-4 py-2 rounded-md <?= isActive('/set_pengguna/') ? 'bg-indigo-600 text-white hover:bg-indigo-800 transition ease-in-out' : 'dark:hover:bg-gray-800' ?>">
                         <i data-lucide="users" class="w-5 h-5 mr-2"></i>
                         Pengguna

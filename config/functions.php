@@ -124,9 +124,9 @@ function showSuccessAlert()
         'tambah' => 'Data berhasil ditambahkan!',
         'edit' => 'Data berhasil diedit!',
         'hapus' => 'Data berhasil dihapus!',
-        'invalid' => 'Something wrong... data berkaitan dengan data yang lain, hubungi admin jika ingin melakukan aksi!',
-        'twin' => 'Data sudah tersedia, silahkan melakukan perubahan data.',
-        'error' => 'Error! Gagal melakukan aksi.',
+        'invalid' => 'Aksi gagal: Data yang Anda coba hapus atau ubah terkait dengan data lain. Silakan periksa kembali atau hubungi administrator jika Anda yakin ini adalah kesalahan.',
+        'twin' => 'Data duplikat: Data yang Anda masukkan sudah ada dalam sistem. Silakan periksa kembali atau lakukan perubahan pada data yang ada.',
+        'error' => 'Terjadi kesalahan! Aksi tidak dapat diselesaikan karena masalah teknis. Silakan coba lagi nanti atau hubungi petugas.',
         default => 'Aksi berhasil dilakukan.'
     };
 

@@ -7,6 +7,12 @@ if (!isset($_SESSION['login_admin'])) {
     exit;
 }
 
+// HALAMAN HANYA UNTUK ROLE ADMINISTRATOR
+if (isset($_SESSION['role']) && ($_SESSION['role'] == 'petugas')) {
+    header("Location: ../../../auth/login_admin/login.php");
+    exit;
+}
+
 // Ambil data admin
 $admin = query("SELECT * FROM admin ORDER BY created_at DESC");
 

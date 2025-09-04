@@ -81,18 +81,16 @@ require_once '../../../includes/sidebar.php';
                             </a>
                         </div>
 
-                        <!-- Export -->
+                        <!-- Cetak -->
                         <div class="flex gap-2">
-                            <button type="button" class="flex-1 bg-green-600 text-white px-4 py-2 rounded shadow opacity-60 cursor-not-allowed" disabled>
-                                Export Excel
-                            </button>
-                            <button type="button" class="flex-1 bg-red-600 text-white px-4 py-2 rounded shadow opacity-60 cursor-not-allowed" disabled>
-                                Export PDF
+                            <button type="button" onclick="window.print()"
+                                class="flex-1 bg-yellow-600 hover:bg-yellow-500 text-white px-4 py-2 rounded shadow">
+                                Cetak Laporan
                             </button>
                         </div>
                     </div>
                 </form>
-
+                    
                 <div>
                     <table id="dataTables" class="overflow-x-auto min-w-full bg-gray-800 text-sm text-white table-auto border-collapse display responsive nowrap">
                         <thead>

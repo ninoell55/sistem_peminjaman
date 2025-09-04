@@ -16,6 +16,13 @@ foreach ($result as $r) {
     $roles[] = $r['role'];
 }
 
+$jurusan_list = [
+    'RPL',
+    'TKJ',
+    'MM',
+    'DKV'
+];
+
 require_once '../../../includes/header.php';
 require_once '../../../includes/sidebar.php';
 ?>
@@ -53,8 +60,8 @@ require_once '../../../includes/sidebar.php';
                             <th class="px-4 py-3">Username</th>
                             <th class="px-4 py-3">Password</th>
                             <th class="px-4 py-3">Role</th>
-                            <th class="px-4 py-3">Kelas</th>
                             <th class="px-4 py-3">Jurusan</th>
+                            <th class="px-4 py-3">Kelas</th>
                             <th class="px-4 py-3">Nomor Identitas</th>
                             <th class="px-4 py-3">Aksi</th>
                         </tr>
@@ -70,14 +77,14 @@ require_once '../../../includes/sidebar.php';
                                     <td class="px-4 py-3"><?= htmlspecialchars($row['role']) ?></td>
                                     <td class="px-4 py-3">
                                         <?php if (strtolower($row['role']) === 'siswa'): ?>
-                                            <?= htmlspecialchars($row['kelas']) ?>
+                                            <?= htmlspecialchars($row['jurusan']) ?>
                                         <?php else: ?>
                                             <span class="text-gray-400">-</span>
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-4 py-3">
                                         <?php if (strtolower($row['role']) === 'siswa'): ?>
-                                            <?= htmlspecialchars($row['jurusan']) ?>
+                                            <?= htmlspecialchars($row['kelas']) ?>
                                         <?php else: ?>
                                             <span class="text-gray-400">-</span>
                                         <?php endif; ?>
@@ -133,12 +140,17 @@ require_once '../../../includes/sidebar.php';
                     </div>
                     <div id="editSiswaFields" style="display:none;">
                         <div>
-                            <label class="block mb-1 font-medium">Kelas</label>
-                            <input type="text" name="kelas" id="edit_kelas" class="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <label class="block mb-1 font-medium">Jurusan</label>
+                            <select name="jurusan" id="edit_jurusan" class="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <option value="">-- Pilih Jurusan --</option>
+                                <?php foreach ($jurusan_list as $jurusan): ?>
+                                    <option value="<?= htmlspecialchars($jurusan) ?>"><?= htmlspecialchars($jurusan) ?></option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
                         <div>
-                            <label class="block mb-1 font-medium">Jurusan</label>
-                            <input type="text" name="jurusan" id="edit_jurusan" class="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <label class="block mb-1 font-medium">Kelas</label>
+                            <input type="text" name="kelas" id="edit_kelas" class="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                         </div>
                     </div>
                     <div>
@@ -185,12 +197,17 @@ require_once '../../../includes/sidebar.php';
                     </div>
                     <div id="siswaFields" style="display:none;">
                         <div>
-                            <label class="block mb-1 font-medium">Kelas</label>
-                            <input type="text" name="kelas" id="field_kelas" class="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <label class="block mb-1 font-medium">Jurusan</label>
+                            <select name="jurusan" id="field_jurusan" class="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <option value="">-- Pilih Jurusan --</option>
+                                <?php foreach ($jurusan_list as $jurusan): ?>
+                                    <option value="<?= htmlspecialchars($jurusan) ?>"><?= htmlspecialchars($jurusan) ?></option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
                         <div>
-                            <label class="block mb-1 font-medium">Jurusan</label>
-                            <input type="text" name="jurusan" id="field_jurusan" class="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <label class="block mb-1 font-medium">Kelas</label>
+                            <input type="text" name="kelas" id="field_kelas" class="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                         </div>
                     </div>
                     <div>
